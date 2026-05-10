@@ -18,7 +18,30 @@ KATALIS_KEYWORDS = [
 
 # Daftar sampel untuk pengujian (Jenderal bisa masukkan seluruh 239 ticker nanti)
 DAFTAR_MONITOR = [
-    "MAPI", "HEAL", "BBCA", "NISP", "HMSP", "KLBF", "SIDO", "UNTR", "ASII"
+    "BBCA", "SSIA", "DMAS", "INTP", "SMGR", "PTPP", "WTON", "TLKM", "ASII", "GOTO",
+    "AMMN", "BRIS", "BBNI", "BBRI", "BMRI", "BBTN", "ADRO", "ANTM", "MDKA", "PTBA",
+    "ITMG", "UNTR", "PGAS", "MEDC", "ELSA", "AKRA", "INDY", "HRUM", "BRPT", "TPIA",
+    "CPIN", "JPFA", "ICBP", "INDF", "MYOR", "AMRT", "KLBF", "SIDO", "HEAL", "MAPI",
+    "ACES", "SCMA", "EMTK", "BUKA", "ISAT", "EXCL", "JSMR", "PGEO", "CTRA", "BSDE",
+    "BRMS", "INCO", "INKP", "PTRO", "CUAN", "RAJA", "BUMI", "BIPI", "AADI", "BTPS",
+    "MSTI", "RMKE", "COAL", "GTSI", "HMSP", "PACK", "STRK", "BBRM", "GIAA", "GMFI",
+    "MAHA", "CBRE", "MERI", "HALO", "IATA", "TCPI", "ICON", "INET", "IRSX", "IOTF",
+    "AWAN", "PTMP", "ASPI", "MUTU", "NRCA", "WIFI", "BSBK", "SMDM", "RATU", "TRUE",
+    "DEFI", "LCKM", "EMAS", "AVIA", "MDIA", "DOOH", "VKTR", "CGAS", "CDIA", "KAQI",
+    "BJBR", "BNGA", "BDMN", "SMRA", "PWON", "MIKA", "SILO", "PRDA", "SAME", "BMHS",
+    "TSPC", "OMED", "UNVR", "GGRM", "ERAA", "MNCN", "TOWR", "TBIG", "BIRD", "ASSA",
+    "PBSA", "MTEL", "WIKA", "ADHI", "PNSE", "BJTM", "ASRI", "JRPT", "BKSL", "APLN",
+    "BMTR", "ENRG", "MAPA", "PANS", "PPRO", "TINS", "TKIM", "WOOD", "PANI", "SRTG", 
+    "RISE", "CBDK", "LPKR", "BAPA", "KIJA", "LAND", "RODA", "DCII", "BELI", "LSIP",
+    "DMMX", "EDGE", "CYBR", "MTDL", "WIRG", "DIVA", "TRON", "KIOS", "HDIT", "BYAN", 
+    "DSSA", "ADMR", "GEMS", "DEWA", "BULL", "MBMA", "NCKL", "ESSA", "ELPI", "TMAS", 
+    "SMDR", "HATM", "IMJS", "BLOG", "BLTA", "MITI", "JAYA", "WEHA", "SDMU", "LAJU", 
+    "PJHB", "IMPC", "BNBR", "SINI", "JTPE", "HEXA", "SKRN", "ARNA", "MARK", "BHIT", 
+    "KUAS", "PADA", "HOPE", "CTTH", "KOBX", "BREN", "MORA", "SUPR", "ARKO", "PPRE", 
+    "KETR", "DATA", "OASA", "IRRA", "SOHO", "CARE", "PRAY", "KAEF", "MEDS", "RSCH", 
+    "MMIX", "ARTO", "BNLI", "SMMA", "CASA", "MEGA", "PADI", "BFIN", "SUPA", "MSIN", 
+    "BUVA", "FILM", "MDIY", "HRTA", "AUTO", "POLU", "KOTA", "MINA", "ZATA", "YELO", 
+    "KPIG", "PGUN", "TAPG", "CMRY", "WMUU", "SIMP", "COCO", "FORE", "NISP", "ULTJ",
 ]
 
 def bersihkan_teks(html_content):

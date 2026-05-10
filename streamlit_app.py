@@ -3,15 +3,22 @@ import pandas as pd
 import yfinance as yf
 import os
 import numpy as np
+from datetime import datetime, timedelta, timezone
 
 # ==========================================
-# 1. PENGATURAN WAR ROOM
+# 1. KONFIGURASI PUSAT & PORTOFOLIO
 # ==========================================
 st.set_page_config(page_title="The Commander V4.0", layout="wide", page_icon="🎯")
-st.title("🎯 THE COMMANDER V4.0 - HYBRID RADAR")
-st.markdown("---")
+st.title("🎯 THE COMMANDER V4.0 - HYBRID WAR ROOM")
 
-# Daftar Saham Pasukan Inti (Jenderal bisa menambahkan hingga puluhan ticker di sini)
+BATAS_LIKUIDITAS_RP = 5_000_000_000 
+RASIO_SQUEEZE_MAKS = 1.1
+
+PORTOFOLIO_AKTIF = {
+    "NISP.JK": {"harga_beli": 1357.03, "tanggal_beli": "2026-05-06", "stop_loss_pct": 3.0, "pengali_atr": 1.5},
+    "MAPI.JK": {"harga_beli": 1407.10, "tanggal_beli": "2026-05-08", "stop_loss_pct": 1.8, "pengali_atr": 1.5}
+}
+
 DAFTAR_SAHAM_INTI = [
     "BBCA.JK", "SSIA.JK", "DMAS.JK", "INTP.JK", "SMGR.JK", "PTPP.JK", "WTON.JK", "TLKM.JK", "ASII.JK", "GOTO.JK",
     "AMMN.JK", "BRIS.JK", "BBNI.JK", "BBRI.JK", "BMRI.JK", "BBTN.JK", "ADRO.JK", "ANTM.JK", "MDKA.JK", "PTBA.JK",
@@ -36,140 +43,113 @@ DAFTAR_SAHAM_INTI = [
     "KETR.JK", "DATA.JK", "OASA.JK", "IRRA.JK", "SOHO.JK", "CARE.JK", "PRAY.JK", "KAEF.JK", "MEDS.JK", "RSCH.JK", 
     "MMIX.JK", "ARTO.JK", "BNLI.JK", "SMMA.JK", "CASA.JK", "MEGA.JK", "PADI.JK", "BFIN.JK", "SUPA.JK", "MSIN.JK", 
     "BUVA.JK", "FILM.JK", "MDIY.JK", "HRTA.JK", "AUTO.JK", "POLU.JK", "KOTA.JK", "MINA.JK", "ZATA.JK", "YELO.JK", 
-    "KPIG.JK", "PGUN.JK", "TAPG.JK", "CMRY.JK", "WMUU.JK", "SIMP.JK", "COCO.JK", "FORE.JK", "NISP.JK", "ULTJ.JK",
+    "KPIG.JK", "PGUN.JK", "TAPG.JK", "CMRY.JK", "WMUU.JK", "SIMP.JK", "COCO.JK", "FORE.JK", "NISP.JK", "ULTJ.JK"
 ]
 
-file_katalis = "katalis_aktif.csv"
-df_katalis = pd.DataFrame()
+SEKTOR = {
+    "FINANCIALS": ["BBCA.JK", "BBRI.JK", "BMRI.JK", "BBNI.JK", "BRIS.JK"],
+    "HEALTHCARE": ["KLBF.JK", "MIKA.JK", "SILO.JK", "HEAL.JK", "SIDO.JK"],
+    "ENERGY": ["ADRO.JK", "ITMG.JK", "PTBA.JK", "MEDC.JK"],
+    "CONSUMER_CYCLICALS": ["MAPI.JK", "MAPA.JK", "ACES.JK"]
+}
 
-# 1. BACA INTELIJEN DULU (Agar tahu saham apa yang harus dipindai)
+# ==========================================
+# 2. MESIN ANALISIS (THE COMMANDER LOGIC)
+# ==========================================
+
+@st.cache_data(ttl=300) # Cache 5 menit
+def ambil_data_pasar(tickers):
+    data = yf.download(tickers, period='8mo', group_by='ticker', progress=False)
+    return data
+
+def hitung_sinyal(ticker, df):
+    try:
+        df = df.dropna(subset=['Close'])
+        if len(df) < 120: return None
+        
+        close = df['Close']
+        # 1. Saboteur (Squeeze)
+        sma20 = close.rolling(20).mean()
+        std20 = close.rolling(20).std()
+        bw = ((sma20 + 2*std20) - (sma20 - 2*std20)) / sma20 * 100
+        bw_min_120 = bw.rolling(120).min().iloc[-1]
+        rasio_sqz = bw.iloc[-1] / bw_min_120
+        
+        # 2. Vanguard (MACD Golden Cross)
+        exp1 = close.ewm(span=12).mean()
+        exp2 = close.ewm(span=26).mean()
+        macd = exp1 - exp2
+        sig = macd.ewm(span=9).mean()
+        
+        # 3. Scout (RSI)
+        delta = close.diff()
+        gain = delta.clip(lower=0).rolling(14).mean()
+        loss = -delta.clip(upper=0).rolling(14).mean()
+        rsi = 100 - (100 / (1 + (gain/loss)))
+        
+        # Penentuan Sinyal
+        sinyal = "Standby"
+        if rasio_sqz <= RASIO_SQUEEZE_MAKS: sinyal = "🟡 Saboteur (Squeeze)"
+        if macd.iloc[-2] <= sig.iloc[-2] and macd.iloc[-1] > sig.iloc[-1]: sinyal = "🟢 Vanguard (Cross)"
+        if rsi.iloc[-1] < 30: sinyal = "🔴 Kill Zone (Oversold)"
+        
+        return {
+            "Ticker": ticker,
+            "Harga": float(close.iloc[-1]),
+            "RSI": round(rsi.iloc[-1], 2),
+            "Sinyal Teknikal": sinyal,
+            "Squeeze Ratio": round(rasio_sqz, 2)
+        }
+    except: return None
+
+# ==========================================
+# 3. INTERFACE WAR ROOM
+# ==========================================
+
+# Sidebar - Filter & Intelijen
+st.sidebar.header("📡 INTELIJEN PUSAT")
+file_katalis = "katalis_aktif.csv"
+berita_dict = {}
 if os.path.exists(file_katalis):
     df_katalis = pd.read_csv(file_katalis)
-    if not df_katalis.empty:
-        saham_berita = df_katalis['Ticker'].tolist()
-        # Gabungkan pasukan inti dengan saham yang ada di berita (hilangkan duplikat)
-        DAFTAR_SAHAM = list(set(DAFTAR_SAHAM_INTI + saham_berita))
-    else:
-        DAFTAR_SAHAM = DAFTAR_SAHAM_INTI
-else:
-    DAFTAR_SAHAM = DAFTAR_SAHAM_INTI
+    berita_dict = pd.Series(df_katalis.Katalis.values, index=df_katalis.Ticker).to_dict()
+    st.sidebar.success(f"Ditemukan {len(berita_dict)} Berita Fundamental")
 
-# ==========================================
-# 2. MESIN TEKNIKAL (DATA BURSA LIVE)
-# ==========================================
-@st.cache_data(ttl=900) # Cache 15 menit agar tidak diblokir Yahoo Finance
-def pindai_pasar(tickers):
-    hasil = []
+# --- PROSES DATA ---
+with st.spinner("Memindai Seluruh Pasukan..."):
+    tickers_to_scan = list(set(DAFTAR_SAHAM_INTI + list(berita_dict.keys())))
+    raw_data = ambil_data_pasar(tickers_to_scan)
     
-    # Progress bar untuk visualisasi pemindaian
-    progress_text = "Radar sedang menyapu pasar..."
-    my_bar = st.progress(0, text=progress_text)
-    
-    for i, ticker in enumerate(tickers):
-        try:
-            # Update progress bar
-            my_bar.progress((i + 1) / len(tickers), text=f"Memindai {ticker}...")
-            
-            # Tarik data 6 bulan terakhir
-            saham = yf.Ticker(ticker)
-            df = saham.history(period="6mo")
-            
-            if df.empty:
-                continue
-                
-            close = df['Close']
-            
-            # Perhitungan Indikator Taktis
-            sma20 = close.rolling(window=20).mean()
-            sma50 = close.rolling(window=50).mean()
-            
-            # RSI 14
-            delta = close.diff()
-            gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
-            loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
-            rs = gain / loss
-            rsi = 100 - (100 / (1 + rs))
-            
-            # Bollinger Band (Deteksi Squeeze)
-            std20 = close.rolling(window=20).std()
-            upper_band = sma20 + (std20 * 2)
-            lower_band = sma20 - (std20 * 2)
-            bandwidth = (upper_band - lower_band) / sma20
-            
-            # Ambil data hari terakhir
-            last_close = close.iloc[-1]
-            last_rsi = rsi.iloc[-1]
-            last_sma20 = sma20.iloc[-1]
-            last_sma50 = sma50.iloc[-1]
-            last_bw = bandwidth.iloc[-1]
-            
-            # Logika Sinyal Sederhana (Bisa disesuaikan dengan strategi Jenderal)
-            sinyal = "Standby"
-            if last_sma20 > last_sma50 and 40 < last_rsi < 65:
-                sinyal = "🟢 Vanguard (Uptrend Awal)"
-            elif last_rsi < 30:
-                sinyal = "🔴 Kill Zone (Oversold)"
-            elif last_bw < 0.05: # Squeeze ketat
-                sinyal = "🟡 Saboteur (Squeeze Volatilitas)"
-                
-            hasil.append({
-                "Ticker": ticker,
-                "Harga Terakhir": float(last_close),
-                "RSI (14)": round(last_rsi, 2),
-                "Sinyal Teknikal": sinyal
-            })
-        except Exception as e:
-            pass
-            
-    my_bar.empty() # Hilangkan progress bar jika selesai
-    return pd.DataFrame(hasil)
+    hasil_list = []
+    for t in tickers_to_scan:
+        res = hitung_sinyal(t, raw_data[t])
+        if res:
+            # Gabungkan dengan Berita
+            res["Katalis Fundamental"] = f"🚨 {berita_dict[t]}" if t in berita_dict else "-"
+            hasil_list.append(res)
 
-# Mengeksekusi pemindaian
-with st.spinner("Mengaktifkan Mesin Teknikal..."):
-    df_radar = pindai_pasar(DAFTAR_SAHAM)
+df_final = pd.DataFrame(hasil_list)
 
-st.sidebar.success(f"Mesin Teknikal: Berhasil Memindai {len(df_radar)} Saham")
+# --- TAMPILAN UTAMA ---
+col1, col2 = st.columns([3, 1])
 
-# ==========================================
-# 3. MESIN INTELIJEN & PERKAWINAN DATA (MERGE)
-# ==========================================
-file_katalis = "katalis_aktif.csv"
+with col1:
+    st.subheader("🎯 RADAR STRATEGIS")
+    st.dataframe(df_final, use_container_width=True, hide_index=True)
 
-if os.path.exists(file_katalis):
-    st.sidebar.success("Mesin Intelijen: Terhubung ke Gmail")
-    df_katalis = pd.read_csv(file_katalis)
-    
-    # Penggabungan Hybrid
-    df_final = pd.merge(df_radar, df_katalis[['Ticker', 'Katalis']], on='Ticker', how='left')
-    df_final['Katalis'] = df_final['Katalis'].fillna('-')
-    df_final['Katalis Fundamental'] = df_final['Katalis'].apply(lambda x: f"🚨 {x}" if x != '-' else x)
-    df_final = df_final.drop(columns=['Katalis']) # Buang kolom asli agar rapi
-else:
-    st.sidebar.warning("Mesin Intelijen: Tidak ada email katalis hari ini")
-    df_final = df_radar.copy()
-    df_final['Katalis Fundamental'] = '-'
+with col2:
+    st.subheader("🛡️ THE GUARDIAN")
+    for ticker, info in PORTOFOLIO_AKTIF.items():
+        if ticker in raw_data:
+            harga_skrg = raw_data[ticker]['Close'].iloc[-1]
+            profit_loss = ((harga_skrg - info['harga_beli']) / info['harga_beli']) * 100
+            color = "green" if profit_loss > 0 else "red"
+            st.markdown(f"**{ticker}**")
+            st.markdown(f"PnL: :{color}[{profit_loss:.2f}%]")
+            st.progress(max(0, min(100, int(100 + profit_loss))))
 
-# ==========================================
-# 4. MENAMPILKAN KE LAYAR
-# ==========================================
-# Desain Tabel
-st.dataframe(
-    df_final, 
-    use_container_width=True, 
-    hide_index=True,
-    column_config={
-        "Harga Terakhir": st.column_config.NumberColumn(
-            "Harga", format="Rp %d"
-        ),
-        "RSI (14)": st.column_config.NumberColumn(
-            "Kekuatan RSI", format="%.2f"
-        )
-    }
-)
-
-# Tombol Penyegaran Manual (Jadwal otomatis diserahkan ke sistem eksternal)
-if st.button("🔄 Pindai Ulang Pasar Sekarang"):
+if st.button("🔄 REFRESH RADAR (REAL-TIME)"):
     st.cache_data.clear()
     st.rerun()
 
-st.caption("⚙️ The Commander V4.0 | Harga ditarik dari Yahoo Finance | Sinyal Fundamental dari Ekstraktor Email")
+st.caption(f"Update Terakhir: {datetime.now().strftime('%H:%M:%S')} WIB | Sinyal Otomatis ditarik setiap kali halaman direfresh.")

@@ -4,21 +4,20 @@ import yfinance as yf
 import os
 import numpy as np
 from datetime import datetime, timedelta, timezone
+from streamlit_autorefresh import st_autorefresh
 
 # ==========================================
-# 1. KONFIGURASI PUSAT & PORTOFOLIO
+# 1. PENGATURAN MARKAS & AUTOPILOT
 # ==========================================
-st.set_page_config(page_title="The Commander V4.0", layout="wide", page_icon="🎯")
-st.title("🎯 THE COMMANDER V4.0 - HYBRID WAR ROOM")
+st.set_page_config(page_title="Hybrid War Room V4.0", layout="wide", page_icon="⚔️")
+
+# KONFIGURASI AUTOPILOT: Segarkan layar setiap 60.000 milidetik (1 Menit)
+st_autorefresh(interval=60000, key="commander_radar_ping")
 
 BATAS_LIKUIDITAS_RP = 5_000_000_000 
 RASIO_SQUEEZE_MAKS = 1.1
 
-PORTOFOLIO_AKTIF = {
-    "NISP.JK": {"harga_beli": 1357.03, "tanggal_beli": "2026-05-06", "stop_loss_pct": 3.0, "pengali_atr": 1.5},
-    "MAPI.JK": {"harga_beli": 1407.10, "tanggal_beli": "2026-05-08", "stop_loss_pct": 1.8, "pengali_atr": 1.5}
-}
-
+# Pasukan Inti Jenderal
 DAFTAR_SAHAM_INTI = [
     "BBCA.JK", "SSIA.JK", "DMAS.JK", "INTP.JK", "SMGR.JK", "PTPP.JK", "WTON.JK", "TLKM.JK", "ASII.JK", "GOTO.JK",
     "AMMN.JK", "BRIS.JK", "BBNI.JK", "BBRI.JK", "BMRI.JK", "BBTN.JK", "ADRO.JK", "ANTM.JK", "MDKA.JK", "PTBA.JK",
@@ -43,31 +42,43 @@ DAFTAR_SAHAM_INTI = [
     "KETR.JK", "DATA.JK", "OASA.JK", "IRRA.JK", "SOHO.JK", "CARE.JK", "PRAY.JK", "KAEF.JK", "MEDS.JK", "RSCH.JK", 
     "MMIX.JK", "ARTO.JK", "BNLI.JK", "SMMA.JK", "CASA.JK", "MEGA.JK", "PADI.JK", "BFIN.JK", "SUPA.JK", "MSIN.JK", 
     "BUVA.JK", "FILM.JK", "MDIY.JK", "HRTA.JK", "AUTO.JK", "POLU.JK", "KOTA.JK", "MINA.JK", "ZATA.JK", "YELO.JK", 
-    "KPIG.JK", "PGUN.JK", "TAPG.JK", "CMRY.JK", "WMUU.JK", "SIMP.JK", "COCO.JK", "FORE.JK", "NISP.JK", "ULTJ.JK"
+    "KPIG.JK", "PGUN.JK", "TAPG.JK", "CMRY.JK", "WMUU.JK", "SIMP.JK", "COCO.JK", "FORE.JK", "NISP.JK", "ULTJ.JK",
 ]
 
 SEKTOR = {
-    "FINANCIALS": ["BBCA.JK", "BBRI.JK", "BMRI.JK", "BBNI.JK", "BRIS.JK"],
-    "HEALTHCARE": ["KLBF.JK", "MIKA.JK", "SILO.JK", "HEAL.JK", "SIDO.JK"],
-    "ENERGY": ["ADRO.JK", "ITMG.JK", "PTBA.JK", "MEDC.JK"],
-    "CONSUMER_CYCLICALS": ["MAPI.JK", "MAPA.JK", "ACES.JK"]
+    "FINANCIALS": ["BBCA.JK", "BBRI.JK", "BMRI.JK", "BBNI.JK", "BRIS.JK", "MEGA.JK", "BNGA.JK", "BDMN.JK", "BBTN.JK", "BNLI.JK"],
+    "ENERGY": ["BYAN.JK", "ADRO.JK", "DSSA.JK", "PTBA.JK", "MEDC.JK", "ITMG.JK", "AKRA.JK", "PGAS.JK", "ADMR.JK", "BUMI.JK"],
+    "PROPERTIES_REAL_ESTATE": ["PANI.JK", "BSDE.JK", "CTRA.JK", "PWON.JK", "SMRA.JK", "ASRI.JK", "KIJA.JK", "APLN.JK", "JRPT.JK", "BKSL.JK"],
+    "TECHNOLOGY": ["GOTO.JK", "DCII.JK", "EMTK.JK", "BUKA.JK", "BELI.JK", "WIRG.JK", "MTDL.JK", "WIFI.JK", "DMMX.JK", "EDGE.JK"],
+    "CONSUMER_NON_CYCLICALS": ["ICBP.JK", "INDF.JK", "AMRT.JK", "UNVR.JK", "CPIN.JK", "MYOR.JK", "HMSP.JK", "GGRM.JK", "CMRY.JK", "JPFA.JK"],
+    "CONSUMER_CYCLICALS": ["MAPI.JK", "MAPA.JK", "ACES.JK", "SCMA.JK", "ERAA.JK", "FILM.JK", "MSIN.JK", "AUTO.JK", "HRTA.JK", "MNCN.JK"],
+    "INFRASTRUCTURES": ["BREN.JK", "TLKM.JK", "ISAT.JK", "EXCL.JK", "PGEO.JK", "MTEL.JK", "TBIG.JK", "JSMR.JK", "WIKA.JK", "PTPP.JK"],
+    "HEALTHCARE": ["KLBF.JK", "MIKA.JK", "SILO.JK", "HEAL.JK", "SIDO.JK", "OMED.JK", "TSPC.JK", "IRRA.JK", "SAME.JK", "KAEF.JK"],
+    "BASIC_MATERIALS": ["AMMN.JK", "TPIA.JK", "BRPT.JK", "MDKA.JK", "MBMA.JK", "NCKL.JK", "INCO.JK", "ANTM.JK", "INKP.JK", "SMGR.JK"],
+    "INDUSTRIALS": ["ASII.JK", "UNTR.JK", "IMPC.JK", "PTRO.JK", "VKTR.JK", "AVIA.JK", "ARNA.JK", "MARK.JK", "HEXA.JK", "BNBR.JK"],
+    "TRANSPORTATION_LOGISTIC": ["SMDR.JK", "TMAS.JK", "ASSA.JK", "BIRD.JK", "GIAA.JK", "ELPI.JK", "HATM.JK", "IMJS.JK", "WEHA.JK", "LAJU.JK"]
 }
 
 # ==========================================
-# 2. MESIN ANALISIS (THE COMMANDER LOGIC)
+# 2. ENGINE ANALISIS (THE COMMANDER ENGINE)
 # ==========================================
 
-@st.cache_data(ttl=300) # Cache 5 menit
-def ambil_data_pasar(tickers):
-    data = yf.download(tickers, period='8mo', group_by='ticker', progress=False)
-    return data
+# TTL diatur 60 detik agar sinkron dengan auto-refresh
+@st.cache_data(ttl=60)
+def download_data(tickers):
+    return yf.download(tickers, period='8mo', group_by='ticker', progress=False)
 
-def hitung_sinyal(ticker, df):
+def kalkulasi_unit(ticker, df):
     try:
         df = df.dropna(subset=['Close'])
         if len(df) < 120: return None
-        
         close = df['Close']
+        vol = df['Volume']
+        
+        # Likuiditas check
+        nilai_trans = (close * vol).tail(10).mean()
+        if nilai_trans < BATAS_LIKUIDITAS_RP: return None
+
         # 1. Saboteur (Squeeze)
         sma20 = close.rolling(20).mean()
         std20 = close.rolling(20).std()
@@ -75,7 +86,7 @@ def hitung_sinyal(ticker, df):
         bw_min_120 = bw.rolling(120).min().iloc[-1]
         rasio_sqz = bw.iloc[-1] / bw_min_120
         
-        # 2. Vanguard (MACD Golden Cross)
+        # 2. Vanguard (MACD Cross)
         exp1 = close.ewm(span=12).mean()
         exp2 = close.ewm(span=26).mean()
         macd = exp1 - exp2
@@ -85,20 +96,20 @@ def hitung_sinyal(ticker, df):
         delta = close.diff()
         gain = delta.clip(lower=0).rolling(14).mean()
         loss = -delta.clip(upper=0).rolling(14).mean()
-        rsi = 100 - (100 / (1 + (gain/loss)))
+        rsi = 100 - (100 / (1 + (gain/loss.replace(0, 1e-10))))
         
-        # Penentuan Sinyal
-        sinyal = "Standby"
-        if rasio_sqz <= RASIO_SQUEEZE_MAKS: sinyal = "🟡 Saboteur (Squeeze)"
-        if macd.iloc[-2] <= sig.iloc[-2] and macd.iloc[-1] > sig.iloc[-1]: sinyal = "🟢 Vanguard (Cross)"
-        if rsi.iloc[-1] < 30: sinyal = "🔴 Kill Zone (Oversold)"
-        
+        # 4. Assassin (Volume Breakout)
+        vol_break = vol.iloc[-1] > (vol.tail(20).mean() * 1.5) and close.iloc[-1] > close.iloc[-2]
+
         return {
             "Ticker": ticker,
-            "Harga": float(close.iloc[-1]),
-            "RSI": round(rsi.iloc[-1], 2),
-            "Sinyal Teknikal": sinyal,
-            "Squeeze Ratio": round(rasio_sqz, 2)
+            "Harga": close.iloc[-1],
+            "RSI": round(rsi.iloc[-1], 1),
+            "Sqz_Ratio": round(rasio_sqz, 2),
+            "Is_Cross": macd.iloc[-2] <= sig.iloc[-2] and macd.iloc[-1] > sig.iloc[-1],
+            "Is_Squeeze": rasio_sqz <= RASIO_SQUEEZE_MAKS,
+            "Is_Break": vol_break,
+            "Is_Green": close.iloc[-1] > close.iloc[-2]
         }
     except: return None
 
@@ -106,50 +117,67 @@ def hitung_sinyal(ticker, df):
 # 3. INTERFACE WAR ROOM
 # ==========================================
 
-# Sidebar - Filter & Intelijen
-st.sidebar.header("📡 INTELIJEN PUSAT")
-file_katalis = "katalis_aktif.csv"
-berita_dict = {}
-if os.path.exists(file_katalis):
-    df_katalis = pd.read_csv(file_katalis)
-    berita_dict = pd.Series(df_katalis.Katalis.values, index=df_katalis.Ticker).to_dict()
-    st.sidebar.success(f"Ditemukan {len(berita_dict)} Berita Fundamental")
+# Membaca Intelijen Gmail (CSV)
+berita_katalis = {}
+if os.path.exists("katalis_aktif.csv"):
+    try:
+        df_kat = pd.read_csv("katalis_aktif.csv")
+        berita_katalis = pd.Series(df_kat.Katalis.values, index=df_kat.Ticker).to_dict()
+    except: pass
 
-# --- PROSES DATA ---
-with st.spinner("Memindai Seluruh Pasukan..."):
-    tickers_to_scan = list(set(DAFTAR_SAHAM_INTI + list(berita_dict.keys())))
-    raw_data = ambil_data_pasar(tickers_to_scan)
+# Header War Room
+st.title("⚔️ THE COMMANDER: HYBRID WAR ROOM")
+waktu_wib = (datetime.now(timezone.utc) + timedelta(hours=7)).strftime('%H:%M:%S')
+st.write(f"📅 Mode: **AUTOPILOT (Refresh 1 Menit)** | 🕒 Jam Radar: **{waktu_wib} WIB**")
+
+# Progress Pemindaian
+with st.spinner("Radar sedang menyapu pasar..."):
+    semua_target = list(set(DAFTAR_SAHAM_INTI + list(berita_katalis.keys())))
+    data_all = download_data(semua_target)
     
-    hasil_list = []
-    for t in tickers_to_scan:
-        res = hitung_sinyal(t, raw_data[t])
+    hasil_tempur = []
+    for t in semua_target:
+        res = kalkulasi_unit(t, data_all[t])
         if res:
-            # Gabungkan dengan Berita
-            res["Katalis Fundamental"] = f"🚨 {berita_dict[t]}" if t in berita_dict else "-"
-            hasil_list.append(res)
+            res["Berita"] = f"🚨 {berita_katalis[t]}" if t in berita_katalis else "-"
+            # Penentuan Combo (Sesuai Referensi Jenderal)
+            if res["Is_Cross"] and res["Is_Break"]: res["Combo"] = "⚔️ Full Assault"
+            elif res["Is_Squeeze"] and res["Is_Cross"]: res["Combo"] = "🧨 Triggered Bomb"
+            elif res["RSI"] < 35 and res["Is_Cross"]: res["Combo"] = "🦅 Phoenix Rising"
+            else: res["Combo"] = "-"
+            hasil_tempur.append(res)
 
-df_final = pd.DataFrame(hasil_list)
+df_final = pd.DataFrame(hasil_tempur)
 
-# --- TAMPILAN UTAMA ---
-col1, col2 = st.columns([3, 1])
+# --- PANEL DASHBOARD ---
+st.divider()
+c1, c2, c3 = st.columns(3)
 
-with col1:
-    st.subheader("🎯 RADAR STRATEGIS")
-    st.dataframe(df_final, use_container_width=True, hide_index=True)
+with c1:
+    st.subheader("🔥 COMBO STRIKES")
+    df_combo = df_final[df_final["Combo"] != "-"]
+    if not df_combo.empty:
+        st.dataframe(df_combo[["Ticker", "Combo", "Berita"]], hide_index=True, use_container_width=True)
+    else: st.info("Mencari target Combo...")
 
-with col2:
-    st.subheader("🛡️ THE GUARDIAN")
-    for ticker, info in PORTOFOLIO_AKTIF.items():
-        if ticker in raw_data:
-            harga_skrg = raw_data[ticker]['Close'].iloc[-1]
-            profit_loss = ((harga_skrg - info['harga_beli']) / info['harga_beli']) * 100
-            color = "green" if profit_loss > 0 else "red"
-            st.markdown(f"**{ticker}**")
-            st.markdown(f"PnL: :{color}[{profit_loss:.2f}%]")
-            st.progress(max(0, min(100, int(100 + profit_loss))))
+with c2:
+    st.subheader("🎯 RADAR PRIORITAS")
+    df_pri = df_final[(df_final["Is_Squeeze"]) | (df_final["Is_Cross"])]
+    if not df_pri.empty:
+        st.dataframe(df_pri[["Ticker", "Harga", "Sqz_Ratio", "Berita"]].sort_values("Sqz_Ratio"), hide_index=True, use_container_width=True)
+    else: st.info("Radar bersih.")
 
-if st.button("🔄 REFRESH RADAR (REAL-TIME)"):
-    st.cache_data.clear()
-    st.rerun()
+with c3:
+    st.subheader("🌊 THE MAGE (Sektor)")
+    for sek, tickers in SEKTOR.items():
+        hijau = df_final[df_final["Ticker"].isin(tickers) & df_final["Is_Green"]]
+        total = len(tickers)
+        pct = (len(hijau)/total)*100 if total > 0 else 0
+        st.write(f"**{sek}**: {pct:.0f}% Hijau")
+        st.progress(pct/100)
 
-st.caption(f"Update Terakhir: {datetime.now().strftime('%H:%M:%S')} WIB | Sinyal Otomatis ditarik setiap kali halaman direfresh.")
+st.divider()
+st.subheader("🏰 KILL ZONE (Oversold RSI)")
+st.dataframe(df_final[df_final["RSI"] < 40].sort_values("RSI"), use_container_width=True, hide_index=True)
+
+st.caption("⚙️ Sistem berjalan otomatis. Setiap perubahan harga di bursa akan langsung terdeteksi pada siklus menit berikutnya.")

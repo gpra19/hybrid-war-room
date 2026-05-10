@@ -3,6 +3,9 @@ name: Penarik Intelijen Harian
 on:
   workflow_dispatch: # Mengizinkan peluncuran paksa manual dari tombol
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   ekstrak_katalis:
     runs-on: ubuntu-latest

@@ -1,0 +1,34 @@
+name: Penarik Intelijen Harian
+
+on:
+  workflow_dispatch: # Mengizinkan peluncuran paksa manual dari tombol
+
+jobs:
+  ekstrak_katalis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Menurunkan Pasukan ke Lapangan
+        uses: actions/checkout@v4
+
+      - name: Menyiapkan Mesin Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Memasang Amunisi
+        run: pip install pandas python-dotenv
+
+      - name: Membuka Gerbang Intelijen
+        env:
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_PASS: ${{ secrets.GMAIL_PASS }}
+        run: python ekstraktor_katalis.py
+
+      - name: Menyimpan Laporan ke Markas
+        run: |
+          git config --global user.name "The Commander Bot"
+          git config --global user.email "commander@bot.com"
+          git add katalis_aktif.csv
+          git commit -m "Update intelijen fundamental harian" || echo "Tidak ada data baru"
+          git push

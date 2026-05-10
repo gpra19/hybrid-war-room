@@ -12,7 +12,7 @@ st.title("🎯 THE COMMANDER V4.0 - HYBRID RADAR")
 st.markdown("---")
 
 # Daftar Saham Pasukan Inti (Jenderal bisa menambahkan hingga puluhan ticker di sini)
-DAFTAR_SAHAM = [
+DAFTAR_SAHAM_INTI = [
     "BBCA.JK", "SSIA.JK", "DMAS.JK", "INTP.JK", "SMGR.JK", "PTPP.JK", "WTON.JK", "TLKM.JK", "ASII.JK", "GOTO.JK",
     "AMMN.JK", "BRIS.JK", "BBNI.JK", "BBRI.JK", "BMRI.JK", "BBTN.JK", "ADRO.JK", "ANTM.JK", "MDKA.JK", "PTBA.JK",
     "ITMG.JK", "UNTR.JK", "PGAS.JK", "MEDC.JK", "ELSA.JK", "AKRA.JK", "INDY.JK", "HRUM.JK", "BRPT.JK", "TPIA.JK",
@@ -38,6 +38,21 @@ DAFTAR_SAHAM = [
     "BUVA.JK", "FILM.JK", "MDIY.JK", "HRTA.JK", "AUTO.JK", "POLU.JK", "KOTA.JK", "MINA.JK", "ZATA.JK", "YELO.JK", 
     "KPIG.JK", "PGUN.JK", "TAPG.JK", "CMRY.JK", "WMUU.JK", "SIMP.JK", "COCO.JK", "FORE.JK", "NISP.JK", "ULTJ.JK",
 ]
+
+file_katalis = "katalis_aktif.csv"
+df_katalis = pd.DataFrame()
+
+# 1. BACA INTELIJEN DULU (Agar tahu saham apa yang harus dipindai)
+if os.path.exists(file_katalis):
+    df_katalis = pd.read_csv(file_katalis)
+    if not df_katalis.empty:
+        saham_berita = df_katalis['Ticker'].tolist()
+        # Gabungkan pasukan inti dengan saham yang ada di berita (hilangkan duplikat)
+        DAFTAR_SAHAM = list(set(DAFTAR_SAHAM_INTI + saham_berita))
+    else:
+        DAFTAR_SAHAM = DAFTAR_SAHAM_INTI
+else:
+    DAFTAR_SAHAM = DAFTAR_SAHAM_INTI
 
 # ==========================================
 # 2. MESIN TEKNIKAL (DATA BURSA LIVE)

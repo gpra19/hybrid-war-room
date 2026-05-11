@@ -8,9 +8,9 @@ from streamlit_autorefresh import st_autorefresh
 import plotly.graph_objects as go
 
 # ==========================================
-# 1. PENGATURAN MARKAS
+# 1. PENGATURAN MARKAS (V6.3 TROJAN HORSE ENGINE)
 # ==========================================
-st.set_page_config(page_title="The Commander V6.2", layout="centered", page_icon="⚔️")
+st.set_page_config(page_title="The Commander V6.3", layout="centered", page_icon="⚔️")
 
 st.markdown("""
     <style>
@@ -71,29 +71,8 @@ SEKTOR = {
 }
 
 # ==========================================
-# 2. ENGINE ANALISIS TAKTIS & RADAR CUACA
+# 2. ENGINE ANALISIS TAKTIS
 # ==========================================
-
-@st.cache_data(ttl=180)
-def radar_cuaca_ihsg():
-    try:
-        # Kode ^JKSE adalah IHSG di Yahoo Finance
-        df_ihsg = yf.download("^JKSE", period="2mo", progress=False)
-        if not df_ihsg.empty and len(df_ihsg) >= 20:
-            close_skrg = float(df_ihsg['Close'].iloc[-1])
-            close_kmrn = float(df_ihsg['Close'].iloc[-2])
-            ma20 = float(df_ihsg['Close'].rolling(20).mean().iloc[-1])
-            pct_change = ((close_skrg - close_kmrn) / close_kmrn) * 100
-            
-            if close_skrg >= ma20:
-                status = "🐂 BULLISH - Cuaca Cerah!"
-            else:
-                status = "🐻 BEARISH - Hati-hati Badai Beruang!"
-                
-            return close_skrg, pct_change, status
-    except:
-        return None, None, "Sinyal IHSG Terputus"
-    return None, None, "Sinyal IHSG Terputus"
 
 @st.cache_data(ttl=180)
 def download_data(tickers):
@@ -167,7 +146,7 @@ def highlight_cells(val, col):
 FORMAT_ANGKA = {"Harga": "{:,.0f}", "Target Profit": "{:,.0f}", "Support": "{:,.0f}", "RSI": "{:.1f}", "Sqz_Ratio": "{:.2f}x"}
 
 # ==========================================
-# 3. INTERFACE BRIEFING
+# 3. INTERFACE BRIEFING & EKSEKUSI KUDA TROYA
 # ==========================================
 waktu_wib = datetime.now(timezone.utc) + timedelta(hours=7)
 
@@ -181,25 +160,46 @@ if os.path.exists("katalis_aktif.csv"):
         berita_katalis = pd.Series(df_kat.Katalis.values, index=df_kat.Ticker).to_dict()
     except: pass
 
-st.markdown("## 🎖️ THE COMMANDER V6.2")
-st.caption(f"📅 **{waktu_wib.strftime('%Y-%m-%d %H:%M WIB')}** | Weather Radar Update")
+st.markdown("## 🎖️ THE COMMANDER V6.3")
+st.caption(f"📅 **{waktu_wib.strftime('%Y-%m-%d %H:%M WIB')}** | Trojan Horse Update")
 
-# --- 🌩️ MODUL RADAR IHSG (ANTI-SILUMAN) ---
-ihsg_val, ihsg_pct, ihsg_stat = radar_cuaca_ihsg()
-if ihsg_val is not None:
-    st.info(f"🌩️ **RADAR IHSG:** {ihsg_val:,.0f} ({ihsg_pct:+.2f}%) | **Status Makro:** {ihsg_stat}")
-else:
-    st.error("📡 **RADAR IHSG:** Sinyal Satelit Terputus (Gagal menarik data ^JKSE akibat Rate Limit. Menunggu siklus refresh berikutnya...)")
-# -----------------------------
+# Placeholder untuk menampilkan Radar IHSG di paling atas nanti
+panel_ihsg = st.empty()
 
-with st.spinner("Mengumpulkan Intelijen..."):
+with st.spinner("Menyelundupkan Satelit & Mengumpulkan Intelijen..."):
     semua_target = [t for t in list(set(DAFTAR_SAHAM_INTI + list(PORTOFOLIO_AKTIF.keys()))) if t not in DAFTAR_HITAM]
-    data_all = download_data(semua_target)
-    tanggal_maks = max([data_all[t].index[-1] for t in semua_target if not data_all[t].empty], default=waktu_wib)
     
+    # 🔥 TAKTIK KUDA TROYA: Menyelundupkan ^JKSE ke dalam rombongan besar
+    if "^JKSE" not in semua_target:
+        semua_target.append("^JKSE")
+        
+    data_all = download_data(semua_target)
+    tanggal_maks = max([data_all[t].index[-1] for t in semua_target if t != "^JKSE" and not data_all[t].empty], default=waktu_wib)
+    
+    # --- PROSES DATA IHSG (Disaring dari hasil download massal) ---
+    ihsg_val, ihsg_pct, ihsg_stat = None, None, "Menunggu Sinyal"
+    if "^JKSE" in data_all and not data_all["^JKSE"].empty:
+        df_ihsg = data_all["^JKSE"].dropna(subset=['Close'])
+        if len(df_ihsg) >= 20:
+            close_skrg = float(df_ihsg['Close'].iloc[-1])
+            close_kmrn = float(df_ihsg['Close'].iloc[-2])
+            ma20 = float(df_ihsg['Close'].rolling(20).mean().iloc[-1])
+            ihsg_pct = ((close_skrg - close_kmrn) / close_kmrn) * 100
+            ihsg_val = close_skrg
+            ihsg_stat = "🐂 BULLISH - Cuaca Cerah!" if close_skrg >= ma20 else "🐻 BEARISH - Hati-hati Badai Beruang!"
+            
+    # Tembakkan ke Placeholder Paling Atas
+    if ihsg_val is not None:
+        panel_ihsg.info(f"🌩️ **RADAR IHSG:** {ihsg_val:,.0f} ({ihsg_pct:+.2f}%) | **Status Makro:** {ihsg_stat}")
+    else:
+        panel_ihsg.error("📡 **RADAR IHSG:** Data ^JKSE Kosong (Bursa Libur atau Data Belum Masuk)")
+    # -------------------------------------------------------------
+
     hasil_tempur, guardian_data, alarm_trigger = [], [], False
 
     for t in semua_target:
+        if t == "^JKSE": continue # Abaikan IHSG untuk kalkulasi saham ritel
+
         if t in PORTOFOLIO_AKTIF and not data_all[t].empty:
             guardian_data.append(unit_guardian(t, data_all[t], PORTOFOLIO_AKTIF[t]))
 

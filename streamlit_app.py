@@ -17,7 +17,7 @@ st_autorefresh(interval=60000, key="commander_radar_ping")
 BATAS_LIKUIDITAS_RP = 5_000_000_000 
 RASIO_SQUEEZE_MAKS = 1.1
 
-# Pasukan Inti Jenderal
+# Daftar Lengkap Pasukan Terpadu (239 Ticker)
 DAFTAR_SAHAM_INTI = [
     "BBCA.JK", "SSIA.JK", "DMAS.JK", "INTP.JK", "SMGR.JK", "PTPP.JK", "WTON.JK", "TLKM.JK", "ASII.JK", "GOTO.JK",
     "AMMN.JK", "BRIS.JK", "BBNI.JK", "BBRI.JK", "BMRI.JK", "BBTN.JK", "ADRO.JK", "ANTM.JK", "MDKA.JK", "PTBA.JK",
@@ -42,36 +42,41 @@ DAFTAR_SAHAM_INTI = [
     "KETR.JK", "DATA.JK", "OASA.JK", "IRRA.JK", "SOHO.JK", "CARE.JK", "PRAY.JK", "KAEF.JK", "MEDS.JK", "RSCH.JK", 
     "MMIX.JK", "ARTO.JK", "BNLI.JK", "SMMA.JK", "CASA.JK", "MEGA.JK", "PADI.JK", "BFIN.JK", "SUPA.JK", "MSIN.JK", 
     "BUVA.JK", "FILM.JK", "MDIY.JK", "HRTA.JK", "AUTO.JK", "POLU.JK", "KOTA.JK", "MINA.JK", "ZATA.JK", "YELO.JK", 
-    "KPIG.JK", "PGUN.JK", "TAPG.JK", "CMRY.JK", "WMUU.JK", "SIMP.JK", "COCO.JK", "FORE.JK", "NISP.JK", "ULTJ.JK",
+    "KPIG.JK", "PGUN.JK", "TAPG.JK", "CMRY.JK", "WMUU.JK", "SIMP.JK", "COCO.JK", "FORE.JK", "NISP.JK", "ULTJ.JK"
 ]
 
 SEKTOR = {
     "FINANCIALS": ["BBCA.JK", "BBRI.JK", "BMRI.JK", "BBNI.JK", "BRIS.JK", "MEGA.JK", "BNGA.JK", "BDMN.JK", "BBTN.JK", "BNLI.JK"],
     "ENERGY": ["BYAN.JK", "ADRO.JK", "DSSA.JK", "PTBA.JK", "MEDC.JK", "ITMG.JK", "AKRA.JK", "PGAS.JK", "ADMR.JK", "BUMI.JK"],
-    "PROPERTIES_REAL_ESTATE": ["PANI.JK", "BSDE.JK", "CTRA.JK", "PWON.JK", "SMRA.JK", "ASRI.JK", "KIJA.JK", "APLN.JK", "JRPT.JK", "BKSL.JK"],
+    "PROPERTIES": ["PANI.JK", "BSDE.JK", "CTRA.JK", "PWON.JK", "SMRA.JK", "ASRI.JK", "KIJA.JK", "APLN.JK", "JRPT.JK", "BKSL.JK"],
     "TECHNOLOGY": ["GOTO.JK", "DCII.JK", "EMTK.JK", "BUKA.JK", "BELI.JK", "WIRG.JK", "MTDL.JK", "WIFI.JK", "DMMX.JK", "EDGE.JK"],
-    "CONSUMER_NON_CYCLICALS": ["ICBP.JK", "INDF.JK", "AMRT.JK", "UNVR.JK", "CPIN.JK", "MYOR.JK", "HMSP.JK", "GGRM.JK", "CMRY.JK", "JPFA.JK"],
-    "CONSUMER_CYCLICALS": ["MAPI.JK", "MAPA.JK", "ACES.JK", "SCMA.JK", "ERAA.JK", "FILM.JK", "MSIN.JK", "AUTO.JK", "HRTA.JK", "MNCN.JK"],
+    "CONS. NON CYCLICAL": ["ICBP.JK", "INDF.JK", "AMRT.JK", "UNVR.JK", "CPIN.JK", "MYOR.JK", "HMSP.JK", "GGRM.JK", "CMRY.JK", "JPFA.JK"],
+    "CONS. CYCLICAL": ["MAPI.JK", "MAPA.JK", "ACES.JK", "SCMA.JK", "ERAA.JK", "FILM.JK", "MSIN.JK", "AUTO.JK", "HRTA.JK", "MNCN.JK"],
     "INFRASTRUCTURES": ["BREN.JK", "TLKM.JK", "ISAT.JK", "EXCL.JK", "PGEO.JK", "MTEL.JK", "TBIG.JK", "JSMR.JK", "WIKA.JK", "PTPP.JK"],
     "HEALTHCARE": ["KLBF.JK", "MIKA.JK", "SILO.JK", "HEAL.JK", "SIDO.JK", "OMED.JK", "TSPC.JK", "IRRA.JK", "SAME.JK", "KAEF.JK"],
-    "BASIC_MATERIALS": ["AMMN.JK", "TPIA.JK", "BRPT.JK", "MDKA.JK", "MBMA.JK", "NCKL.JK", "INCO.JK", "ANTM.JK", "INKP.JK", "SMGR.JK"],
+    "BASIC MATERIALS": ["AMMN.JK", "TPIA.JK", "BRPT.JK", "MDKA.JK", "MBMA.JK", "NCKL.JK", "INCO.JK", "ANTM.JK", "INKP.JK", "SMGR.JK"],
     "INDUSTRIALS": ["ASII.JK", "UNTR.JK", "IMPC.JK", "PTRO.JK", "VKTR.JK", "AVIA.JK", "ARNA.JK", "MARK.JK", "HEXA.JK", "BNBR.JK"],
-    "TRANSPORTATION_LOGISTIC": ["SMDR.JK", "TMAS.JK", "ASSA.JK", "BIRD.JK", "GIAA.JK", "ELPI.JK", "HATM.JK", "IMJS.JK", "WEHA.JK", "LAJU.JK"]
+    "TRANSPORTATION": ["SMDR.JK", "TMAS.JK", "ASSA.JK", "BIRD.JK", "GIAA.JK", "ELPI.JK", "HATM.JK", "IMJS.JK", "WEHA.JK", "LAJU.JK"]
 }
 
 # ==========================================
-# 2. ENGINE ANALISIS (THE COMMANDER ENGINE)
+# 2. ENGINE ANALISIS TAKTIS (UPGRADE)
 # ==========================================
 
-# TTL diatur 60 detik agar sinkron dengan auto-refresh
+# UPGRADE 1: Beban historis dikurangi dari 8mo ke 6mo untuk efisiensi server
 @st.cache_data(ttl=60)
 def download_data(tickers):
-    return yf.download(tickers, period='8mo', group_by='ticker', progress=False)
+    return yf.download(tickers, period='6mo', group_by='ticker', progress=False)
 
-def kalkulasi_unit(ticker, df):
+def kalkulasi_unit(ticker, df, tanggal_maks_bursa, waktu_sekarang):
     try:
         df = df.dropna(subset=['Close'])
         if len(df) < 120: return None
+        
+        # UPGRADE 3: Pembuangan saham suspend. Jika tanggal data terakhir tidak sama dengan bursa, abaikan.
+        if df.index[-1].date() < tanggal_maks_bursa.date():
+            return None
+
         close = df['Close']
         vol = df['Volume']
         
@@ -99,23 +104,28 @@ def kalkulasi_unit(ticker, df):
         rsi = 100 - (100 / (1 + (gain/loss.replace(0, 1e-10))))
         
         # 4. Assassin (Volume Breakout)
-        vol_break = vol.iloc[-1] > (vol.tail(20).mean() * 1.5) and close.iloc[-1] > close.iloc[-2]
+        # UPGRADE 2: Filter Waktu. Assassin hanya mengeksekusi jika jam lebih dari 09:30 WIB
+        jam_bursa_stabil = waktu_sekarang.time() >= datetime.strptime("09:30", "%H:%M").time()
+        vol_break = jam_bursa_stabil and (vol.iloc[-1] > (vol.tail(20).mean() * 1.5)) and (close.iloc[-1] > close.iloc[-2])
 
         return {
             "Ticker": ticker,
-            "Harga": close.iloc[-1],
+            "Harga": float(close.iloc[-1]),
             "RSI": round(rsi.iloc[-1], 1),
             "Sqz_Ratio": round(rasio_sqz, 2),
             "Is_Cross": macd.iloc[-2] <= sig.iloc[-2] and macd.iloc[-1] > sig.iloc[-1],
             "Is_Squeeze": rasio_sqz <= RASIO_SQUEEZE_MAKS,
             "Is_Break": vol_break,
-            "Is_Green": close.iloc[-1] > close.iloc[-2]
+            "Is_Green": float(close.iloc[-1]) > float(close.iloc[-2])
         }
     except: return None
 
 # ==========================================
-# 3. INTERFACE WAR ROOM
+# 3. INTERFACE HYBRID WAR ROOM
 # ==========================================
+
+# Waktu Global Operasi
+waktu_wib = datetime.now(timezone.utc) + timedelta(hours=7)
 
 # Membaca Intelijen Gmail (CSV)
 berita_katalis = {}
@@ -125,22 +135,31 @@ if os.path.exists("katalis_aktif.csv"):
         berita_katalis = pd.Series(df_kat.Katalis.values, index=df_kat.Ticker).to_dict()
     except: pass
 
-# Header War Room
-st.title("⚔️ THE COMMANDER: HYBRID WAR ROOM")
-waktu_wib = (datetime.now(timezone.utc) + timedelta(hours=7)).strftime('%H:%M:%S')
-st.write(f"📅 Mode: **AUTOPILOT (Refresh 1 Menit)** | 🕒 Jam Radar: **{waktu_wib} WIB**")
+st.title("⚔️ THE COMMANDER: HYBRID WAR ROOM V4.0")
+st.write(f"📅 Mode: **AUTOPILOT (Refresh 1 Menit)** | 🕒 Jam Radar: **{waktu_wib.strftime('%H:%M:%S')} WIB**")
 
-# Progress Pemindaian
 with st.spinner("Radar sedang menyapu pasar..."):
     semua_target = list(set(DAFTAR_SAHAM_INTI + list(berita_katalis.keys())))
     data_all = download_data(semua_target)
     
+    # Mencari tanggal transaksi terbaru di seluruh pasar (untuk deteksi saham suspend)
+    tanggal_maks = None
+    for t in semua_target:
+        try:
+            if not data_all[t].empty:
+                tgl_terakhir = data_all[t].index[-1]
+                if tanggal_maks is None or tgl_terakhir > tanggal_maks:
+                    tanggal_maks = tgl_terakhir
+        except: pass
+        
+    if tanggal_maks is None: tanggal_maks = waktu_wib
+    
     hasil_tempur = []
     for t in semua_target:
-        res = kalkulasi_unit(t, data_all[t])
+        res = kalkulasi_unit(t, data_all[t], tanggal_maks, waktu_wib)
         if res:
             res["Berita"] = f"🚨 {berita_katalis[t]}" if t in berita_katalis else "-"
-            # Penentuan Combo (Sesuai Referensi Jenderal)
+            # Penentuan Combo
             if res["Is_Cross"] and res["Is_Break"]: res["Combo"] = "⚔️ Full Assault"
             elif res["Is_Squeeze"] and res["Is_Cross"]: res["Combo"] = "🧨 Triggered Bomb"
             elif res["RSI"] < 35 and res["Is_Cross"]: res["Combo"] = "🦅 Phoenix Rising"
@@ -155,29 +174,35 @@ c1, c2, c3 = st.columns(3)
 
 with c1:
     st.subheader("🔥 COMBO STRIKES")
-    df_combo = df_final[df_final["Combo"] != "-"]
-    if not df_combo.empty:
-        st.dataframe(df_combo[["Ticker", "Combo", "Berita"]], hide_index=True, use_container_width=True)
+    if not df_final.empty:
+        df_combo = df_final[df_final["Combo"] != "-"]
+        if not df_combo.empty:
+            st.dataframe(df_combo[["Ticker", "Combo", "Berita"]], hide_index=True, use_container_width=True)
+        else: st.info("Mencari target Combo...")
     else: st.info("Mencari target Combo...")
 
 with c2:
     st.subheader("🎯 RADAR PRIORITAS")
-    df_pri = df_final[(df_final["Is_Squeeze"]) | (df_final["Is_Cross"])]
-    if not df_pri.empty:
-        st.dataframe(df_pri[["Ticker", "Harga", "Sqz_Ratio", "Berita"]].sort_values("Sqz_Ratio"), hide_index=True, use_container_width=True)
+    if not df_final.empty:
+        df_pri = df_final[(df_final["Is_Squeeze"]) | (df_final["Is_Cross"])]
+        if not df_pri.empty:
+            st.dataframe(df_pri[["Ticker", "Harga", "Sqz_Ratio", "Berita"]].sort_values("Sqz_Ratio"), hide_index=True, use_container_width=True)
+        else: st.info("Radar bersih.")
     else: st.info("Radar bersih.")
 
 with c3:
     st.subheader("🌊 THE MAGE (Sektor)")
-    for sek, tickers in SEKTOR.items():
-        hijau = df_final[df_final["Ticker"].isin(tickers) & df_final["Is_Green"]]
-        total = len(tickers)
-        pct = (len(hijau)/total)*100 if total > 0 else 0
-        st.write(f"**{sek}**: {pct:.0f}% Hijau")
-        st.progress(pct/100)
+    if not df_final.empty:
+        for sek, tickers in SEKTOR.items():
+            hijau = df_final[df_final["Ticker"].isin(tickers) & df_final["Is_Green"]]
+            total = len([t for t in tickers if t in df_final["Ticker"].values])
+            pct = (len(hijau)/total)*100 if total > 0 else 0
+            st.write(f"**{sek}**: {pct:.0f}% Hijau")
+            st.progress(pct/100)
 
 st.divider()
-st.subheader("🏰 KILL ZONE (Oversold RSI)")
-st.dataframe(df_final[df_final["RSI"] < 40].sort_values("RSI"), use_container_width=True, hide_index=True)
+st.subheader("🏰 KILL ZONE (Oversold RSI < 40)")
+if not df_final.empty:
+    st.dataframe(df_final[df_final["RSI"] < 40].sort_values("RSI"), use_container_width=True, hide_index=True)
 
-st.caption("⚙️ Sistem berjalan otomatis. Setiap perubahan harga di bursa akan langsung terdeteksi pada siklus menit berikutnya.")
+st.caption("⚙️ Engine The Commander V4.0 | Saham Suspend & Likuiditas < 5M Otomatis Dibuang | Volume Breakout aktif setelah 09:30 WIB.")

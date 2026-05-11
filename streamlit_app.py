@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 # ==========================================
 # 1. PENGATURAN MARKAS & AUTOPILOT
 # ==========================================
-st.set_page_config(page_title="Hybrid War Room V5.1", layout="wide", page_icon="⚔️")
+st.set_page_config(page_title="Hybrid War Room V5.2", layout="wide", page_icon="⚔️")
 
 # CSS Termal & UI
 st.markdown("""
@@ -23,6 +23,9 @@ st.markdown("""
 # Autopilot: Refresh diubah ke 3 Menit (180.000 ms) agar Anti-Blokir Yahoo Finance
 st_autorefresh(interval=180000, key="commander_radar_ping")
 
+# 🛡️ DAFTAR HITAM: Mencegah ekstraktor Gmail salah memasukkan saham bodong
+DAFTAR_HITAM = ["BUMN.JK", "IHSG.JK", "LQ45.JK", "COMP.JK", "IDX.JK"]
+
 BATAS_LIKUIDITAS_RP = 5_000_000_000 
 RASIO_SQUEEZE_MAKS = 1.1
 
@@ -31,7 +34,7 @@ PORTOFOLIO_AKTIF = {
     "MAPI.JK": {"harga_beli": 1407.10, "stop_loss_pct": 1.8, "pengali_atr": 1.5, "tanggal_beli": "2026-05-08"}
 }
 
-# 238 Pasukan Inti Jenderal (BUMN.JK telah dibuang)
+# 238 Pasukan Inti Jenderal (BUMN.JK telah dibuang secara permanen)
 DAFTAR_SAHAM_INTI = [
     "BBCA.JK", "SSIA.JK", "DMAS.JK", "INTP.JK", "SMGR.JK", "PTPP.JK", "WTON.JK", "TLKM.JK", "ASII.JK", "GOTO.JK",
     "AMMN.JK", "BRIS.JK", "BBNI.JK", "BBRI.JK", "BMRI.JK", "BBTN.JK", "ADRO.JK", "ANTM.JK", "MDKA.JK", "PTBA.JK",
@@ -74,7 +77,7 @@ SEKTOR = {
 }
 
 # ==========================================
-# 2. ENGINE ANALISIS TAKTIS V5.1 (HOTFIX)
+# 2. ENGINE ANALISIS TAKTIS V5.2
 # ==========================================
 
 @st.cache_data(ttl=180) # Sinkron dengan autorefresh 3 menit
@@ -156,11 +159,15 @@ if os.path.exists("katalis_aktif.csv"):
         berita_katalis = pd.Series(df_kat.Katalis.values, index=df_kat.Ticker).to_dict()
     except: pass
 
-st.title("⚔️ THE COMMANDER: HYBRID WAR ROOM V5.1")
+st.title("⚔️ THE COMMANDER: HYBRID WAR ROOM V5.2")
 st.write(f"📅 Mode: **AUTOPILOT (Refresh 3 Menit)** | 🕒 Jam Radar: **{waktu_wib.strftime('%H:%M:%S')} WIB**")
 
 with st.spinner("Menyapu Medan Tempur..."):
-    semua_target = list(set(DAFTAR_SAHAM_INTI + list(berita_katalis.keys()) + list(PORTOFOLIO_AKTIF.keys())))
+    semua_target_mentah = list(set(DAFTAR_SAHAM_INTI + list(berita_katalis.keys()) + list(PORTOFOLIO_AKTIF.keys())))
+    
+    # 🛡️ FILTER PENYUSUP: Menghilangkan entitas yang masuk Daftar Hitam
+    semua_target = [t for t in semua_target_mentah if t not in DAFTAR_HITAM]
+    
     data_all = download_data(semua_target)
     
     tanggal_maks = max([data_all[t].index[-1] for t in semua_target if not data_all[t].empty], default=waktu_wib)
@@ -209,7 +216,7 @@ if ticker_pilihan != "PILIH SAHAM" and not data_all[ticker_pilihan].empty:
     fig = go.Figure(data=[go.Candlestick(x=df_chart.index, open=df_chart['Open'], high=df_chart['High'], low=df_chart['Low'], close=df_chart['Close'], name="Harga")])
     fig.add_trace(go.Scatter(x=df_chart.index, y=df_chart['Close'].rolling(20).mean(), line=dict(color='orange', width=1), name="MA20"))
     fig.update_layout(template="plotly_dark", height=400, margin=dict(l=20, r=20, t=20, b=20), xaxis_rangeslider_visible=False)
-    # HOTFIX: Mengganti use_container_width dengan width="stretch" untuk masa depan Streamlit
+    # HOTFIX: Menerapkan width="stretch" untuk masa depan Streamlit
     st.plotly_chart(fig, width="stretch")
 
 # --- PANEL DASHBOARD UTAMA ---
@@ -222,7 +229,7 @@ with c_kiri:
         df_combo = df_final[df_final["Combo"] != "-"]
         if not df_combo.empty:
             st_df = df_combo[["Ticker", "Combo", "Harga", "Target Profit", "Support", "Berita"]].style.map(lambda x: highlight_cells(x, "RSI"), subset=["Harga"]) 
-            # HOTFIX: Mengganti use_container_width
+            # HOTFIX: Menerapkan width="stretch"
             st.dataframe(st_df, hide_index=True, width="stretch")
         else: st.info("Mencari target Combo...")
     else: st.info("Radar bersih.")
@@ -232,7 +239,6 @@ with c_kiri:
         df_pri = df_final[(df_final["Is_Squeeze"]) | (df_final["Is_Cross"])]
         if not df_pri.empty:
             st_df2 = df_pri[["Ticker", "Harga", "Target Profit", "Support", "Sqz_Ratio", "Berita"]].sort_values("Sqz_Ratio").style.map(lambda x: highlight_cells(x, "Sqz_Ratio"), subset=["Sqz_Ratio"])
-            # HOTFIX: Mengganti use_container_width
             st.dataframe(st_df2, hide_index=True, width="stretch")
         else: st.info("Radar bersih.")
 
@@ -255,5 +261,4 @@ st.divider()
 st.subheader("🏰 KILL ZONE (Oversold RSI < 40)")
 if not df_final.empty:
     st_df3 = df_final[df_final["RSI"] < 40][["Ticker", "Harga", "Target Profit", "Support", "RSI", "Berita"]].sort_values("RSI").style.map(lambda x: highlight_cells(x, "RSI"), subset=["RSI"])
-    # HOTFIX: Mengganti use_container_width
     st.dataframe(st_df3, hide_index=True, width="stretch")

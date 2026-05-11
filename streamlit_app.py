@@ -184,10 +184,12 @@ if os.path.exists("katalis_aktif.csv"):
 st.markdown("## 🎖️ THE COMMANDER V6.2")
 st.caption(f"📅 **{waktu_wib.strftime('%Y-%m-%d %H:%M WIB')}** | Weather Radar Update")
 
-# --- 🌩️ MODUL RADAR IHSG ---
+# --- 🌩️ MODUL RADAR IHSG (ANTI-SILUMAN) ---
 ihsg_val, ihsg_pct, ihsg_stat = radar_cuaca_ihsg()
 if ihsg_val is not None:
     st.info(f"🌩️ **RADAR IHSG:** {ihsg_val:,.0f} ({ihsg_pct:+.2f}%) | **Status Makro:** {ihsg_stat}")
+else:
+    st.error("📡 **RADAR IHSG:** Sinyal Satelit Terputus (Gagal menarik data ^JKSE akibat Rate Limit. Menunggu siklus refresh berikutnya...)")
 # -----------------------------
 
 with st.spinner("Mengumpulkan Intelijen..."):

@@ -8,11 +8,18 @@ from streamlit_autorefresh import st_autorefresh
 import plotly.graph_objects as go
 
 # ==========================================
-# 1. PENGATURAN MARKAS (CARD UI)
+# 1. PENGATURAN MARKAS (CARD UI & ADVANCED ENGINE)
 # ==========================================
-st.set_page_config(page_title="The Commander V5.6", layout="centered", page_icon="⚔️")
+st.set_page_config(page_title="The Commander V5.7", layout="centered", page_icon="⚔️")
 
-# Autopilot: Refresh 3 Menit (180.000 ms)
+# CSS Termal & UI
+st.markdown("""
+    <style>
+    .alarm-box { background-color: #4a1919; padding: 10px; border-radius: 5px; border-left: 5px solid #ff4b4b; margin-bottom: 15px;}
+    </style>
+""", unsafe_allow_html=True)
+
+# Autopilot: Refresh 3 Menit
 st_autorefresh(interval=180000, key="commander_radar_ping")
 
 DAFTAR_HITAM = ["BUMN.JK", "IHSG.JK", "LQ45.JK", "COMP.JK", "IDX.JK"]
@@ -95,15 +102,18 @@ def kalkulasi_unit(ticker, df, tanggal_maks, waktu_sekarang):
         loss = -delta.clip(upper=0).rolling(14).mean()
         rsi = 100 - (100 / (1 + (gain/loss.replace(0, 1e-10))))
 
+        sup = close.rolling(20).min().iloc[-1]
+        res_tp = close.rolling(20).max().iloc[-1]
+
         jam_stabil = waktu_sekarang.time() >= datetime.strptime("09:30", "%H:%M").time()
         is_break = jam_stabil and (vol.iloc[-1] > (vol.tail(20).mean() * 1.5)) and (close.iloc[-1] > close.iloc[-2])
 
         return {
-            "Ticker": ticker, "Harga": float(close.iloc[-1]), "RSI": round(rsi.iloc[-1], 1),
+            "Ticker": ticker.replace(".JK", ""), "Harga": float(close.iloc[-1]), "Target Profit": float(res_tp), "Support": float(sup),
+            "RSI": float(rsi.iloc[-1]), "Sqz_Ratio": float(rasio_sqz),
             "Is_Cross": macd.iloc[-2] <= sig.iloc[-2] and macd.iloc[-1] > sig.iloc[-1],
             "Is_Squeeze": rasio_sqz <= RASIO_SQUEEZE_MAKS, "Is_Break": is_break,
-            "Is_Green": float(close.iloc[-1]) > float(close.iloc[-2]),
-            "Sqz_Val": rasio_sqz
+            "Is_Green": float(close.iloc[-1]) > float(close.iloc[-2])
         }
     except: return None
 
@@ -119,20 +129,39 @@ def unit_guardian(kode, df, porto):
     if 'stop_loss_pct' in porto and harga_skrg <= modal * (1 - (porto['stop_loss_pct'] / 100)): return "Evakuasi"
     return "Aman"
 
+# Fungsi Pewarnaan Termal (Heatmap)
+def highlight_cells(val, col):
+    if col == "RSI" and val < 40: return 'background-color: #4a1919; color: white;'
+    if col == "Sqz_Ratio" and val <= RASIO_SQUEEZE_MAKS: return 'background-color: #524b11; color: white;'
+    return ''
+
+# Pengaturan Format Angka (Merapikan nol di belakang koma)
+FORMAT_ANGKA = {"Harga": "{:,.0f}", "Target Profit": "{:,.0f}", "Support": "{:,.0f}", "RSI": "{:.1f}", "Sqz_Ratio": "{:.2f}x"}
+
 # ==========================================
-# 3. INTERFACE BRIEFING UI CARD
+# 3. INTERFACE BRIEFING UI CARD & ALARM
 # ==========================================
 waktu_wib = datetime.now(timezone.utc) + timedelta(hours=7)
-st.markdown("## 🎖️ THE COMMANDER V5.6")
-st.caption(f"📅 **{waktu_wib.strftime('%Y-%m-%d %H:%M WIB')}** | Adaptive Brief Mode")
+
+st.sidebar.header("🎛️ KONTROL RADAR")
+alarm_aktif = st.sidebar.toggle("🔊 Alarm Suara (Squeeze/Cross)", value=True)
+
+berita_katalis = {}
+if os.path.exists("katalis_aktif.csv"):
+    try:
+        df_kat = pd.read_csv("katalis_aktif.csv")
+        berita_katalis = pd.Series(df_kat.Katalis.values, index=df_kat.Ticker).to_dict()
+    except: pass
+
+st.markdown("## 🎖️ THE COMMANDER V5.7")
+st.caption(f"📅 **{waktu_wib.strftime('%Y-%m-%d %H:%M WIB')}** | The Perfect Hybrid Edition")
 
 with st.spinner("Mengumpulkan Intelijen..."):
     semua_target = [t for t in list(set(DAFTAR_SAHAM_INTI + list(PORTOFOLIO_AKTIF.keys()))) if t not in DAFTAR_HITAM]
     data_all = download_data(semua_target)
     tanggal_maks = max([data_all[t].index[-1] for t in semua_target if not data_all[t].empty], default=waktu_wib)
     
-    hasil_tempur = []
-    guardian_status = []
+    hasil_tempur, guardian_status, alarm_trigger = [], [], False
 
     for t in semua_target:
         if t in PORTOFOLIO_AKTIF and not data_all[t].empty:
@@ -140,80 +169,78 @@ with st.spinner("Mengumpulkan Intelijen..."):
             if stat != "Aman": guardian_status.append(f"{t.replace('.JK','')} ({stat})")
 
         res = kalkulasi_unit(t, data_all[t], tanggal_maks, waktu_wib)
-        if res: hasil_tempur.append(res)
-        
+        if res:
+            res["Berita"] = f"🚨 {berita_katalis[t]}" if t in berita_katalis else "-"
+            if res["Is_Cross"] and res["Is_Break"]: res["Sinyal"] = "⚔️ Full Assault"
+            elif res["Is_Squeeze"] and res["Is_Cross"]: res["Sinyal"] = "🧨 Triggered Bomb"
+            elif res["RSI"] < 35 and res["Is_Cross"]: res["Sinyal"] = "🦅 Phoenix Rising"
+            else: res["Sinyal"] = "-"
+            
+            if res["Sinyal"] in ["⚔️ Full Assault", "🧨 Triggered Bomb"]: alarm_trigger = True
+            hasil_tempur.append(res)
+            
     df_final = pd.DataFrame(hasil_tempur)
+
+# Eksekusi Sirine
+if alarm_aktif and alarm_trigger:
+    st.markdown("""<audio autoplay="true" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>""", unsafe_allow_html=True)
+    st.markdown('<div class="alarm-box"><b>🚨 PERHATIAN KOMANDAN:</b> TARGET ASSAULT / TRIGGERED BOMB TERDETEKSI!</div>', unsafe_allow_html=True)
 
 # --- UI CARD 1: OPERASI KHUSUS ---
 with st.container(border=True):
     st.markdown("#### 🔥 OPERASI KHUSUS (COMBO STRIKES)")
     if not df_final.empty:
-        # Full Assault (Cross + Breakout)
-        fa = df_final[df_final["Is_Cross"] & df_final["Is_Break"]]
-        st.markdown("**⚔️ Full Assault:**")
-        if not fa.empty:
-            for i, r in enumerate(fa.iterrows(), 1): st.write(f"   {i}. {r[1]['Ticker'].replace('.JK','')}")
+        df_combo = df_final[df_final["Sinyal"] != "-"]
+        if not df_combo.empty:
+            st_combo = df_combo[["Ticker", "Sinyal", "Harga", "Target Profit", "Support", "Berita"]].style.format(FORMAT_ANGKA)
+            st.dataframe(st_combo, hide_index=True, use_container_width=True)
         else: st.write("   _KOSONG_")
-        
-        # Triggered Bomb (Squeeze + Cross)
-        tb = df_final[df_final["Is_Squeeze"] & df_final["Is_Cross"]]
-        st.markdown("**🧨 Triggered Bomb:**")
-        if not tb.empty:
-            for i, r in enumerate(tb.iterrows(), 1): st.write(f"   {i}. {r[1]['Ticker'].replace('.JK','')}")
-        else: st.write("   _KOSONG_")
-        
-        # Phoenix Rising (RSI < 35 + Cross)
-        pr = df_final[(df_final["RSI"] < 35) & df_final["Is_Cross"]]
-        st.markdown("**🦅 Phoenix Rising:**")
-        if not pr.empty:
-            for i, r in enumerate(pr.iterrows(), 1): st.write(f"   {i}. {r[1]['Ticker'].replace('.JK','')}")
-        else: st.write("   _KOSONG_")
+    else: st.write("   _KOSONG_")
 
 # --- UI CARD 2: RADAR PRIORITAS ---
 with st.container(border=True):
     st.markdown("#### 🎯 RADAR PRIORITAS TUNGGAL")
     if not df_final.empty:
+        boms = df_final[df_final["Is_Squeeze"]].sort_values("Sqz_Ratio").head(10)
         st.markdown("**💣 Bom Waktu (Rasio Kompresi < 1.1x):**")
-        boms = df_final[df_final["Is_Squeeze"]].sort_values("Sqz_Val").head(10)
         if not boms.empty:
-            for i, r in enumerate(boms.iterrows(), 1): st.write(f"   {i}. {r[1]['Ticker'].replace('.JK','')} ({r[1]['Sqz_Val']:.2f}x Rekor)")
+            st_boms = boms[["Ticker", "Harga", "Target Profit", "Support", "Sqz_Ratio", "Berita"]].style.format(FORMAT_ANGKA).map(lambda x: highlight_cells(x, "Sqz_Ratio"), subset=["Sqz_Ratio"])
+            st.dataframe(st_boms, hide_index=True, use_container_width=True)
         else: st.write("   _KOSONG_")
 
-        st.markdown("**🚦 Garda Depan (Golden Cross):**")
         vans = df_final[df_final["Is_Cross"]].head(10)
+        st.markdown("**🚦 Garda Depan (Golden Cross):**")
         if not vans.empty:
-            for i, r in enumerate(vans.iterrows(), 1): st.write(f"   {i}. {r[1]['Ticker'].replace('.JK','')}")
+            st_vans = vans[["Ticker", "Harga", "Target Profit", "Support", "Berita"]].style.format(FORMAT_ANGKA)
+            st.dataframe(st_vans, hide_index=True, use_container_width=True)
         else: st.write("   _KOSONG_")
 
 # --- UI CARD 3: KILL ZONE ---
 with st.container(border=True):
-    st.markdown("#### 🏰 KILL ZONE (RSI Adaptif)")
+    st.markdown("#### 🏰 KILL ZONE (RSI Adaptif < 40)")
     if not df_final.empty:
         kz = df_final[df_final["RSI"] < 40].sort_values("RSI").head(10)
         if not kz.empty:
-            for i, r in enumerate(kz.iterrows(), 1): st.write(f"   {i}. {r[1]['Ticker'].replace('.JK','')} ({r[1]['RSI']:.1f})")
+            st_kz = kz[["Ticker", "Harga", "Target Profit", "Support", "RSI", "Berita"]].style.format(FORMAT_ANGKA).map(lambda x: highlight_cells(x, "RSI"), subset=["RSI"])
+            st.dataframe(st_kz, hide_index=True, use_container_width=True)
         else: st.write("   _KOSONG_")
 
 # --- UI CARD 4: STATUS MARKAS & LOGISTIK ---
 with st.container(border=True):
     st.markdown("#### 🛡️ STATUS MARKAS & LOGISTIK")
-    
-    # Guardian Status
-    if guardian_status:
-        st.markdown(f"**🔰 The Guardian:** Waspada! {', '.join(guardian_status)}")
-    else:
-        st.markdown("**🔰 The Guardian:** Aman.")
+    if guardian_status: st.markdown(f"**🔰 The Guardian:** Waspada! {', '.join(guardian_status)}")
+    else: st.markdown("**🔰 The Guardian:** Aman.")
         
-    # The Mage (Arus Uang)
     st.markdown("**🌊 Arus Uang (The Mage >50%):**")
     if not df_final.empty:
         mage_found = False
         idx = 1
         for sek, tickers in SEKTOR.items():
-            hijau = df_final[df_final["Ticker"].isin(tickers) & df_final["Is_Green"]]
-            total = len([t for t in tickers if t in df_final["Ticker"].values])
+            hijau = df_final[df_final["Ticker"] + ".JK".isin(tickers) if not df_final.empty else False] # Perbaikan filter sektor
+            hijau_count = sum(1 for t in tickers if t.replace('.JK', '') in df_final["Ticker"].values and df_final[df_final["Ticker"] == t.replace('.JK', '')]["Is_Green"].iloc[0])
+            total = sum(1 for t in tickers if t.replace('.JK', '') in df_final["Ticker"].values)
             if total > 0:
-                pct = (len(hijau)/total)*100
+                pct = (hijau_count/total)*100
                 if pct >= 50:
                     st.write(f"   {idx}. {sek}: {pct:.0f}%")
                     idx += 1
@@ -225,9 +252,11 @@ with st.container(border=True):
     st.markdown("#### 📊 PETA TACTICAL")
     with st.expander("Buka Peta Visual (Live Chart)"):
         ticker_pilihan = st.selectbox("Pilih Target:", options=["-"] + sorted(df_final["Ticker"].tolist()) if not df_final.empty else ["-"])
-        if ticker_pilihan != "-" and not data_all[ticker_pilihan].empty:
-            df_chart = data_all[ticker_pilihan].tail(60)
-            fig = go.Figure(data=[go.Candlestick(x=df_chart.index, open=df_chart['Open'], high=df_chart['High'], low=df_chart['Low'], close=df_chart['Close'])])
-            fig.add_trace(go.Scatter(x=df_chart.index, y=df_chart['Close'].rolling(20).mean(), line=dict(color='orange', width=1), name="MA20"))
-            fig.update_layout(template="plotly_dark", height=400, margin=dict(l=10, r=10, t=10, b=10), xaxis_rangeslider_visible=False)
-            st.plotly_chart(fig, width="stretch")
+        if ticker_pilihan != "-":
+            ticker_jk = ticker_pilihan + ".JK"
+            if ticker_jk in data_all and not data_all[ticker_jk].empty:
+                df_chart = data_all[ticker_jk].tail(60)
+                fig = go.Figure(data=[go.Candlestick(x=df_chart.index, open=df_chart['Open'], high=df_chart['High'], low=df_chart['Low'], close=df_chart['Close'])])
+                fig.add_trace(go.Scatter(x=df_chart.index, y=df_chart['Close'].rolling(20).mean(), line=dict(color='orange', width=1), name="MA20"))
+                fig.update_layout(template="plotly_dark", height=400, margin=dict(l=10, r=10, t=10, b=10), xaxis_rangeslider_visible=False)
+                st.plotly_chart(fig, use_container_width=True)

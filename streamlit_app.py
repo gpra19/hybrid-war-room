@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 # ==========================================
 # 1. PENGATURAN MARKAS & AUTOPILOT
 # ==========================================
-st.set_page_config(page_title="Hybrid War Room V5.3", layout="wide", page_icon="⚔️")
+st.set_page_config(page_title="Hybrid War Room V5.4", layout="wide", page_icon="⚔️")
 
 # CSS Termal & UI
 st.markdown("""
@@ -77,19 +77,20 @@ SEKTOR = {
 }
 
 # ==========================================
-# 2. ENGINE ANALISIS TAKTIS V5.3 (HOTFIX)
+# 2. ENGINE ANALISIS TAKTIS V5.4 (HOTFIX 8 BULAN)
 # ==========================================
 
 @st.cache_data(ttl=180) # Sinkron dengan autorefresh 3 menit
 def download_data(tickers):
-    return yf.download(tickers, period='6mo', group_by='ticker', progress=False)
+    # 🔥 HOTFIX V5.4: Dikembalikan ke 8 bulan agar memenuhi syarat mutlak 120 hari bursa
+    return yf.download(tickers, period='8mo', group_by='ticker', progress=False)
 
 def kalkulasi_unit(ticker, df, tanggal_maks, waktu_sekarang):
     try:
         df = df.dropna(subset=['Close'])
         if len(df) < 120: return None
         
-        # 🔥 HOTFIX V5.3: Toleransi saham suspend 7 hari
+        # Toleransi saham suspend 7 hari
         if (tanggal_maks.date() - df.index[-1].date()).days > 7:
             return None
 
@@ -157,7 +158,7 @@ if os.path.exists("katalis_aktif.csv"):
         berita_katalis = pd.Series(df_kat.Katalis.values, index=df_kat.Ticker).to_dict()
     except: pass
 
-st.title("⚔️ THE COMMANDER: HYBRID WAR ROOM V5.3")
+st.title("⚔️ THE COMMANDER: HYBRID WAR ROOM V5.4")
 st.write(f"📅 Mode: **AUTOPILOT (Refresh 3 Menit)** | 🕒 Jam Radar: **{waktu_wib.strftime('%H:%M:%S')} WIB**")
 
 with st.spinner("Menyapu Medan Tempur..."):
@@ -214,7 +215,7 @@ if ticker_pilihan != "PILIH SAHAM" and not data_all[ticker_pilihan].empty:
     fig = go.Figure(data=[go.Candlestick(x=df_chart.index, open=df_chart['Open'], high=df_chart['High'], low=df_chart['Low'], close=df_chart['Close'], name="Harga")])
     fig.add_trace(go.Scatter(x=df_chart.index, y=df_chart['Close'].rolling(20).mean(), line=dict(color='orange', width=1), name="MA20"))
     fig.update_layout(template="plotly_dark", height=400, margin=dict(l=20, r=20, t=20, b=20), xaxis_rangeslider_visible=False)
-    st.plotly_chart(fig, width="stretch")
+    st.plotly_chart(fig, use_container_width=True)
 
 # --- PANEL DASHBOARD UTAMA ---
 st.divider()
@@ -226,7 +227,7 @@ with c_kiri:
         df_combo = df_final[df_final["Combo"] != "-"]
         if not df_combo.empty:
             st_df = df_combo[["Ticker", "Combo", "Harga", "Target Profit", "Support", "Berita"]].style.map(lambda x: highlight_cells(x, "RSI"), subset=["Harga"]) 
-            st.dataframe(st_df, hide_index=True, width="stretch")
+            st.dataframe(st_df, hide_index=True, use_container_width=True)
         else: st.info("Mencari target Combo...")
     else: st.info("Radar bersih.")
 
@@ -235,7 +236,7 @@ with c_kiri:
         df_pri = df_final[(df_final["Is_Squeeze"]) | (df_final["Is_Cross"])]
         if not df_pri.empty:
             st_df2 = df_pri[["Ticker", "Harga", "Target Profit", "Support", "Sqz_Ratio", "Berita"]].sort_values("Sqz_Ratio").style.map(lambda x: highlight_cells(x, "Sqz_Ratio"), subset=["Sqz_Ratio"])
-            st.dataframe(st_df2, hide_index=True, width="stretch")
+            st.dataframe(st_df2, hide_index=True, use_container_width=True)
         else: st.info("Radar bersih.")
 
 with c_kanan:
@@ -257,4 +258,4 @@ st.divider()
 st.subheader("🏰 KILL ZONE (Oversold RSI < 40)")
 if not df_final.empty:
     st_df3 = df_final[df_final["RSI"] < 40][["Ticker", "Harga", "Target Profit", "Support", "RSI", "Berita"]].sort_values("RSI").style.map(lambda x: highlight_cells(x, "RSI"), subset=["RSI"])
-    st.dataframe(st_df3, hide_index=True, width="stretch")
+    st.dataframe(st_df3, hide_index=True, use_container_width=True)

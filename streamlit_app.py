@@ -8,18 +8,16 @@ from streamlit_autorefresh import st_autorefresh
 import plotly.graph_objects as go
 
 # ==========================================
-# 1. PENGATURAN MARKAS (CARD UI & ADVANCED ENGINE)
+# 1. PENGATURAN MARKAS (V6.0 ADVANCED ENGINE)
 # ==========================================
-st.set_page_config(page_title="The Commander V5.8", layout="centered", page_icon="⚔️")
+st.set_page_config(page_title="The Commander V6.0", layout="centered", page_icon="⚔️")
 
-# CSS Termal & UI
 st.markdown("""
     <style>
     .alarm-box { background-color: #4a1919; padding: 10px; border-radius: 5px; border-left: 5px solid #ff4b4b; margin-bottom: 15px;}
     </style>
 """, unsafe_allow_html=True)
 
-# Autopilot: Refresh 3 Menit
 st_autorefresh(interval=180000, key="commander_radar_ping")
 
 DAFTAR_HITAM = ["BUMN.JK", "IHSG.JK", "LQ45.JK", "COMP.JK", "IDX.JK"]
@@ -31,7 +29,6 @@ PORTOFOLIO_AKTIF = {
     "MAPI.JK": {"harga_beli": 1407.10, "stop_loss_pct": 1.8, "pengali_atr": 1.5, "tanggal_beli": "2026-05-08"}
 }
 
-# 238 Pasukan Inti Jenderal
 DAFTAR_SAHAM_INTI = [
     "BBCA.JK", "SSIA.JK", "DMAS.JK", "INTP.JK", "SMGR.JK", "PTPP.JK", "WTON.JK", "TLKM.JK", "ASII.JK", "GOTO.JK",
     "AMMN.JK", "BRIS.JK", "BBNI.JK", "BBRI.JK", "BMRI.JK", "BBTN.JK", "ADRO.JK", "ANTM.JK", "MDKA.JK", "PTBA.JK",
@@ -108,12 +105,20 @@ def kalkulasi_unit(ticker, df, tanggal_maks, waktu_sekarang):
         jam_stabil = waktu_sekarang.time() >= datetime.strptime("09:30", "%H:%M").time()
         is_break = jam_stabil and (vol.iloc[-1] > (vol.tail(20).mean() * 1.5)) and (close.iloc[-1] > close.iloc[-2])
 
+        # UNIT GHOST: Kalkulasi VWAP 10 Hari & OBV
+        tp = (df['High'] + df['Low'] + close) / 3
+        vwap_10 = (tp * vol).rolling(10).sum() / vol.rolling(10).sum()
+        obv = (np.sign(close.diff()) * vol).fillna(0).cumsum()
+        
+        is_ghost = (float(close.iloc[-1]) < float(vwap_10.iloc[-1])) and (float(obv.iloc[-1]) > float(obv.iloc[-11:-1].max()))
+
         return {
             "Ticker": ticker.replace(".JK", ""), "Harga": float(close.iloc[-1]), "Target Profit": float(res_tp), "Support": float(sup),
             "RSI": float(rsi.iloc[-1]), "Sqz_Ratio": float(rasio_sqz),
             "Is_Cross": macd.iloc[-2] <= sig.iloc[-2] and macd.iloc[-1] > sig.iloc[-1],
             "Is_Squeeze": rasio_sqz <= RASIO_SQUEEZE_MAKS, "Is_Break": is_break,
-            "Is_Green": float(close.iloc[-1]) > float(close.iloc[-2])
+            "Is_Green": float(close.iloc[-1]) > float(close.iloc[-2]),
+            "Is_Ghost": is_ghost
         }
     except: return None
 
@@ -129,22 +134,20 @@ def unit_guardian(kode, df, porto):
     if 'stop_loss_pct' in porto and harga_skrg <= modal * (1 - (porto['stop_loss_pct'] / 100)): return "Evakuasi"
     return "Aman"
 
-# Fungsi Pewarnaan Termal (Heatmap)
 def highlight_cells(val, col):
     if col == "RSI" and val < 40: return 'background-color: #4a1919; color: white;'
     if col == "Sqz_Ratio" and val <= RASIO_SQUEEZE_MAKS: return 'background-color: #524b11; color: white;'
     return ''
 
-# Pengaturan Format Angka (Merapikan nol di belakang koma)
 FORMAT_ANGKA = {"Harga": "{:,.0f}", "Target Profit": "{:,.0f}", "Support": "{:,.0f}", "RSI": "{:.1f}", "Sqz_Ratio": "{:.2f}x"}
 
 # ==========================================
-# 3. INTERFACE BRIEFING UI CARD & ALARM
+# 3. INTERFACE BRIEFING V6.0
 # ==========================================
 waktu_wib = datetime.now(timezone.utc) + timedelta(hours=7)
 
 st.sidebar.header("🎛️ KONTROL RADAR")
-alarm_aktif = st.sidebar.toggle("🔊 Alarm Suara (Squeeze/Cross)", value=True)
+alarm_aktif = st.sidebar.toggle("🔊 Alarm Suara", value=True)
 
 berita_katalis = {}
 if os.path.exists("katalis_aktif.csv"):
@@ -153,10 +156,10 @@ if os.path.exists("katalis_aktif.csv"):
         berita_katalis = pd.Series(df_kat.Katalis.values, index=df_kat.Ticker).to_dict()
     except: pass
 
-st.markdown("## 🎖️ THE COMMANDER V5.8")
-st.caption(f"📅 **{waktu_wib.strftime('%Y-%m-%d %H:%M WIB')}** | The Perfect Hybrid Edition")
+st.markdown("## 🎖️ THE COMMANDER V6.0")
+st.caption(f"📅 **{waktu_wib.strftime('%Y-%m-%d %H:%M WIB')}** | Ghost & Mage Upgrade")
 
-with st.spinner("Mengumpulkan Intelijen..."):
+with st.spinner("Mengumpulkan Intelijen (Menghitung VWAP)..."):
     semua_target = [t for t in list(set(DAFTAR_SAHAM_INTI + list(PORTOFOLIO_AKTIF.keys()))) if t not in DAFTAR_HITAM]
     data_all = download_data(semua_target)
     tanggal_maks = max([data_all[t].index[-1] for t in semua_target if not data_all[t].empty], default=waktu_wib)
@@ -171,24 +174,25 @@ with st.spinner("Mengumpulkan Intelijen..."):
         res = kalkulasi_unit(t, data_all[t], tanggal_maks, waktu_wib)
         if res:
             res["Berita"] = f"🚨 {berita_katalis[t]}" if t in berita_katalis else "-"
+            
+            # Prioritas Sinyal Baru
             if res["Is_Cross"] and res["Is_Break"]: res["Sinyal"] = "⚔️ Full Assault"
+            elif res["Is_Ghost"]: res["Sinyal"] = "👻 Ghost Accumulation"
             elif res["Is_Squeeze"] and res["Is_Cross"]: res["Sinyal"] = "🧨 Triggered Bomb"
             elif res["RSI"] < 35 and res["Is_Cross"]: res["Sinyal"] = "🦅 Phoenix Rising"
             else: res["Sinyal"] = "-"
             
-            if res["Sinyal"] in ["⚔️ Full Assault", "🧨 Triggered Bomb"]: alarm_trigger = True
+            if res["Sinyal"] in ["⚔️ Full Assault", "🧨 Triggered Bomb", "👻 Ghost Accumulation"]: alarm_trigger = True
             hasil_tempur.append(res)
             
     df_final = pd.DataFrame(hasil_tempur)
 
-# Eksekusi Sirine
 if alarm_aktif and alarm_trigger:
     st.markdown("""<audio autoplay="true" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>""", unsafe_allow_html=True)
-    st.markdown('<div class="alarm-box"><b>🚨 PERHATIAN KOMANDAN:</b> TARGET ASSAULT / TRIGGERED BOMB TERDETEKSI!</div>', unsafe_allow_html=True)
+    st.markdown('<div class="alarm-box"><b>🚨 PERHATIAN KOMANDAN:</b> ANOMALI TARGET (ASSAULT / GHOST) TERDETEKSI!</div>', unsafe_allow_html=True)
 
-# --- UI CARD 1: OPERASI KHUSUS ---
 with st.container(border=True):
-    st.markdown("#### 🔥 OPERASI KHUSUS (COMBO STRIKES)")
+    st.markdown("#### 🔥 OPERASI KHUSUS (COMBO & GHOST)")
     if not df_final.empty:
         df_combo = df_final[df_final["Sinyal"] != "-"]
         if not df_combo.empty:
@@ -197,7 +201,6 @@ with st.container(border=True):
         else: st.write("   _KOSONG_")
     else: st.write("   _KOSONG_")
 
-# --- UI CARD 2: RADAR PRIORITAS ---
 with st.container(border=True):
     st.markdown("#### 🎯 RADAR PRIORITAS TUNGGAL")
     if not df_final.empty:
@@ -215,7 +218,6 @@ with st.container(border=True):
             st.dataframe(st_vans, hide_index=True, use_container_width=True)
         else: st.write("   _KOSONG_")
 
-# --- UI CARD 3: KILL ZONE ---
 with st.container(border=True):
     st.markdown("#### 🏰 KILL ZONE (RSI Adaptif < 40)")
     if not df_final.empty:
@@ -225,32 +227,37 @@ with st.container(border=True):
             st.dataframe(st_kz, hide_index=True, use_container_width=True)
         else: st.write("   _KOSONG_")
 
-# --- UI CARD 4: STATUS MARKAS & LOGISTIK ---
 with st.container(border=True):
-    st.markdown("#### 🛡️ STATUS MARKAS & LOGISTIK")
+    st.markdown("#### 🛡️ STATUS MARKAS & THE MAGE V2.0")
     if guardian_status: st.markdown(f"**🔰 The Guardian:** Waspada! {', '.join(guardian_status)}")
     else: st.markdown("**🔰 The Guardian:** Aman.")
         
-    st.markdown("**🌊 Arus Uang (The Mage >50%):**")
+    st.markdown("**🌊 Arus Uang (Rotasi Sektor Visual):**")
     if not df_final.empty:
-        mage_found = False
-        idx = 1
+        mage_data = []
         for sek, tickers in SEKTOR.items():
-            # HOTFIX: Pembersihan logika filter sektor yang aman dari Error
             sektor_bersih = [t.replace('.JK', '') for t in tickers]
             df_sektor = df_final[df_final["Ticker"].isin(sektor_bersih)]
-            
             total = len(df_sektor)
             if total > 0:
                 hijau = df_sektor["Is_Green"].sum()
                 pct = (hijau / total) * 100
-                if pct >= 50:
-                    st.write(f"   {idx}. {sek}: {pct:.0f}%")
-                    idx += 1
-                    mage_found = True
-        if not mage_found: st.write("   _KOSONG_")
+                mage_data.append((sek, pct))
+        
+        # Urutkan sektor dari yang terkuat ke terlemah
+        mage_data.sort(key=lambda x: x[1], reverse=True)
+        
+        for sek, pct in mage_data:
+            c1, c2 = st.columns([1, 4])
+            c1.write(f"**{sek}**")
+            # Tampilan Progress Bar Dinamis
+            if pct >= 50:
+                c2.progress(pct/100, text=f"🔥 {pct:.0f}%")
+            elif pct > 0:
+                c2.progress(pct/100, text=f"❄️ {pct:.0f}%")
+            else:
+                c2.write("🧊 0%")
 
-# --- UI CARD 5: PETA TACTICAL ---
 with st.container(border=True):
     st.markdown("#### 📊 PETA TACTICAL")
     with st.expander("Buka Peta Visual (Live Chart)"):
@@ -260,6 +267,12 @@ with st.container(border=True):
             if ticker_jk in data_all and not data_all[ticker_jk].empty:
                 df_chart = data_all[ticker_jk].tail(60)
                 fig = go.Figure(data=[go.Candlestick(x=df_chart.index, open=df_chart['Open'], high=df_chart['High'], low=df_chart['Low'], close=df_chart['Close'])])
+                # Menambahkan garis VWAP dan MA20
+                tp = (df_chart['High'] + df_chart['Low'] + df_chart['Close']) / 3
+                vwap = (tp * df_chart['Volume']).rolling(10).sum() / df_chart['Volume'].rolling(10).sum()
+                
                 fig.add_trace(go.Scatter(x=df_chart.index, y=df_chart['Close'].rolling(20).mean(), line=dict(color='orange', width=1), name="MA20"))
+                fig.add_trace(go.Scatter(x=df_chart.index, y=vwap, line=dict(color='cyan', width=1, dash='dot'), name="VWAP 10d"))
+                
                 fig.update_layout(template="plotly_dark", height=400, margin=dict(l=10, r=10, t=10, b=10), xaxis_rangeslider_visible=False)
                 st.plotly_chart(fig, use_container_width=True)

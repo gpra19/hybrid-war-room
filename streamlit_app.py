@@ -8,14 +8,13 @@ from streamlit_autorefresh import st_autorefresh
 import plotly.graph_objects as go
 
 # ==========================================
-# 1. PENGATURAN MARKAS (V6.1 ADVANCED ENGINE)
+# 1. PENGATURAN MARKAS
 # ==========================================
-st.set_page_config(page_title="The Commander V6.1", layout="centered", page_icon="⚔️")
+st.set_page_config(page_title="The Commander V6.2", layout="centered", page_icon="⚔️")
 
 st.markdown("""
     <style>
     .alarm-box { background-color: #4a1919; padding: 10px; border-radius: 5px; border-left: 5px solid #ff4b4b; margin-bottom: 15px;}
-    .guardian-card { padding: 10px; border-radius: 8px; border: 1px solid #444; background-color: #1e2630; margin-bottom: 10px; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -72,8 +71,29 @@ SEKTOR = {
 }
 
 # ==========================================
-# 2. ENGINE ANALISIS TAKTIS
+# 2. ENGINE ANALISIS TAKTIS & RADAR CUACA
 # ==========================================
+
+@st.cache_data(ttl=180)
+def radar_cuaca_ihsg():
+    try:
+        # Kode ^JKSE adalah IHSG di Yahoo Finance
+        df_ihsg = yf.download("^JKSE", period="2mo", progress=False)
+        if not df_ihsg.empty and len(df_ihsg) >= 20:
+            close_skrg = float(df_ihsg['Close'].iloc[-1])
+            close_kmrn = float(df_ihsg['Close'].iloc[-2])
+            ma20 = float(df_ihsg['Close'].rolling(20).mean().iloc[-1])
+            pct_change = ((close_skrg - close_kmrn) / close_kmrn) * 100
+            
+            if close_skrg >= ma20:
+                status = "🐂 BULLISH - Cuaca Cerah!"
+            else:
+                status = "🐻 BEARISH - Hati-hati Badai Beruang!"
+                
+            return close_skrg, pct_change, status
+    except:
+        return None, None, "Sinyal IHSG Terputus"
+    return None, None, "Sinyal IHSG Terputus"
 
 @st.cache_data(ttl=180)
 def download_data(tickers):
@@ -106,7 +126,6 @@ def kalkulasi_unit(ticker, df, tanggal_maks, waktu_sekarang):
         jam_stabil = waktu_sekarang.time() >= datetime.strptime("09:30", "%H:%M").time()
         is_break = jam_stabil and (vol.iloc[-1] > (vol.tail(20).mean() * 1.5)) and (close.iloc[-1] > close.iloc[-2])
 
-        # UNIT GHOST: Kalkulasi VWAP 10 Hari & OBV
         tp = (df['High'] + df['Low'] + close) / 3
         vwap_10 = (tp * vol).rolling(10).sum() / vol.rolling(10).sum()
         obv = (np.sign(close.diff()) * vol).fillna(0).cumsum()
@@ -148,7 +167,7 @@ def highlight_cells(val, col):
 FORMAT_ANGKA = {"Harga": "{:,.0f}", "Target Profit": "{:,.0f}", "Support": "{:,.0f}", "RSI": "{:.1f}", "Sqz_Ratio": "{:.2f}x"}
 
 # ==========================================
-# 3. INTERFACE BRIEFING V6.1
+# 3. INTERFACE BRIEFING
 # ==========================================
 waktu_wib = datetime.now(timezone.utc) + timedelta(hours=7)
 
@@ -162,8 +181,14 @@ if os.path.exists("katalis_aktif.csv"):
         berita_katalis = pd.Series(df_kat.Katalis.values, index=df_kat.Ticker).to_dict()
     except: pass
 
-st.markdown("## 🎖️ THE COMMANDER V6.1")
-st.caption(f"📅 **{waktu_wib.strftime('%Y-%m-%d %H:%M WIB')}** | Visual Guardian Upgrade")
+st.markdown("## 🎖️ THE COMMANDER V6.2")
+st.caption(f"📅 **{waktu_wib.strftime('%Y-%m-%d %H:%M WIB')}** | Weather Radar Update")
+
+# --- 🌩️ MODUL RADAR IHSG ---
+ihsg_val, ihsg_pct, ihsg_stat = radar_cuaca_ihsg()
+if ihsg_val is not None:
+    st.info(f"🌩️ **RADAR IHSG:** {ihsg_val:,.0f} ({ihsg_pct:+.2f}%) | **Status Makro:** {ihsg_stat}")
+# -----------------------------
 
 with st.spinner("Mengumpulkan Intelijen..."):
     semua_target = [t for t in list(set(DAFTAR_SAHAM_INTI + list(PORTOFOLIO_AKTIF.keys()))) if t not in DAFTAR_HITAM]
@@ -234,17 +259,14 @@ with st.container(border=True):
 with st.container(border=True):
     st.markdown("#### 🛡️ STATUS MARKAS & THE MAGE V2.0")
     
-    # --- HOTFIX V6.1: Visual Guardian Metrics ---
     st.markdown("**🔰 The Guardian (Aset Aktif):**")
     if guardian_data:
         cols = st.columns(len(guardian_data))
         for i, g in enumerate(guardian_data):
             with cols[i]:
-                # Menggunakan st.metric untuk visual yang elegan
                 st.metric(label=f"**{g['Ticker']}**", value=f"Rp {g['Harga']:,.0f}", delta=f"{g['PnL']:.2f}%")
                 st.caption(f"Status: **{g['Status']}**")
     else: st.write("   _KOSONG_")
-    # --------------------------------------------
         
     st.markdown("**🌊 Arus Uang (Rotasi Sektor Visual):**")
     if not df_final.empty:

@@ -2,15 +2,17 @@ import streamlit as st
 import pandas as pd
 import yfinance as yf
 import os
+import json
 import numpy as np
 from datetime import datetime, timedelta, timezone
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from streamlit_autorefresh import st_autorefresh
 import plotly.graph_objects as go
 
 # ==========================================
-# 1. PENGATURAN MARKAS (V6.3 TROJAN HORSE ENGINE)
+# 1. PENGATURAN MARKAS (V7.0 TURBO ENGINE)
 # ==========================================
-st.set_page_config(page_title="The Commander V6.3", layout="centered", page_icon="⚔️")
+st.set_page_config(page_title="The Commander V7.0", layout="centered", page_icon="⚔️")
 
 st.markdown("""
     <style>
@@ -23,11 +25,24 @@ st_autorefresh(interval=180000, key="commander_radar_ping")
 DAFTAR_HITAM = ["BUMN.JK", "IHSG.JK", "LQ45.JK", "COMP.JK", "IDX.JK"]
 BATAS_LIKUIDITAS_RP = 5_000_000_000 
 RASIO_SQUEEZE_MAKS = 1.1
+FILE_PORTOFOLIO = "portofolio_aktif.json"
 
-PORTOFOLIO_AKTIF = {
-    "NISP.JK": {"harga_beli": 1357.03, "stop_loss_pct": 3.0, "pengali_atr": 1.5, "tanggal_beli": "2026-05-06"},
-    "MAPI.JK": {"harga_beli": 1407.10, "stop_loss_pct": 1.8, "pengali_atr": 1.5, "tanggal_beli": "2026-05-08"}
-}
+# --- MODUL GUDANG SENJATA DINAMIS ---
+def muat_portofolio():
+    if os.path.exists(FILE_PORTOFOLIO):
+        with open(FILE_PORTOFOLIO, "r") as f:
+            return json.load(f)
+    # Default jika belum ada file
+    return {
+        "MAPI.JK": {"harga_beli": 1407.10, "stop_loss_pct": 1.8, "pengali_atr": 1.5, "tanggal_beli": "2026-05-08"}
+    }
+
+def simpan_portofolio(data_porto):
+    with open(FILE_PORTOFOLIO, "w") as f:
+        json.dump(data_porto, f, indent=4)
+
+PORTOFOLIO_AKTIF = muat_portofolio()
+# ------------------------------------
 
 DAFTAR_SAHAM_INTI = [
     "BBCA.JK", "SSIA.JK", "DMAS.JK", "INTP.JK", "SMGR.JK", "PTPP.JK", "WTON.JK", "TLKM.JK", "ASII.JK", "GOTO.JK",
@@ -53,34 +68,48 @@ DAFTAR_SAHAM_INTI = [
     "KETR.JK", "DATA.JK", "OASA.JK", "IRRA.JK", "SOHO.JK", "CARE.JK", "PRAY.JK", "KAEF.JK", "MEDS.JK", "RSCH.JK", 
     "MMIX.JK", "ARTO.JK", "BNLI.JK", "SMMA.JK", "CASA.JK", "MEGA.JK", "PADI.JK", "BFIN.JK", "SUPA.JK", "MSIN.JK", 
     "BUVA.JK", "FILM.JK", "MDIY.JK", "HRTA.JK", "AUTO.JK", "POLU.JK", "KOTA.JK", "MINA.JK", "ZATA.JK", "YELO.JK", 
-    "KPIG.JK", "PGUN.JK", "TAPG.JK", "CMRY.JK", "WMUU.JK", "SIMP.JK", "COCO.JK", "FORE.JK", "NISP.JK", "ULTJ.JK"
+    "KPIG.JK", "PGUN.JK", "TAPG.JK", "CMRY.JK", "WMUU.JK", "SIMP.JK", "COCO.JK", "FORE.JK", "NISP.JK", "ULTJ.JK",
 ]
 
 SEKTOR = {
     "FINANCIALS": ["BBCA.JK", "BBRI.JK", "BMRI.JK", "BBNI.JK", "BRIS.JK", "MEGA.JK", "BNGA.JK", "BDMN.JK", "BBTN.JK", "BNLI.JK"],
     "ENERGY": ["BYAN.JK", "ADRO.JK", "DSSA.JK", "PTBA.JK", "MEDC.JK", "ITMG.JK", "AKRA.JK", "PGAS.JK", "ADMR.JK", "BUMI.JK"],
-    "PROPERTIES": ["PANI.JK", "BSDE.JK", "CTRA.JK", "PWON.JK", "SMRA.JK", "ASRI.JK", "KIJA.JK", "APLN.JK", "JRPT.JK", "BKSL.JK"],
+    "PROPERTIES_REAL_ESTATE": ["PANI.JK", "BSDE.JK", "CTRA.JK", "PWON.JK", "SMRA.JK", "ASRI.JK", "KIJA.JK", "APLN.JK", "JRPT.JK", "BKSL.JK"],
     "TECHNOLOGY": ["GOTO.JK", "DCII.JK", "EMTK.JK", "BUKA.JK", "BELI.JK", "WIRG.JK", "MTDL.JK", "WIFI.JK", "DMMX.JK", "EDGE.JK"],
-    "CONS. NON CYCLICAL": ["ICBP.JK", "INDF.JK", "AMRT.JK", "UNVR.JK", "CPIN.JK", "MYOR.JK", "HMSP.JK", "GGRM.JK", "CMRY.JK", "JPFA.JK"],
-    "CONS. CYCLICAL": ["MAPI.JK", "MAPA.JK", "ACES.JK", "SCMA.JK", "ERAA.JK", "FILM.JK", "MSIN.JK", "AUTO.JK", "HRTA.JK", "MNCN.JK"],
+    "CONSUMER_NON_CYCLICALS": ["ICBP.JK", "INDF.JK", "AMRT.JK", "UNVR.JK", "CPIN.JK", "MYOR.JK", "HMSP.JK", "GGRM.JK", "CMRY.JK", "JPFA.JK"],
+    "CONSUMER_CYCLICALS": ["MAPI.JK", "MAPA.JK", "ACES.JK", "SCMA.JK", "ERAA.JK", "FILM.JK", "MSIN.JK", "AUTO.JK", "HRTA.JK", "MNCN.JK"],
     "INFRASTRUCTURES": ["BREN.JK", "TLKM.JK", "ISAT.JK", "EXCL.JK", "PGEO.JK", "MTEL.JK", "TBIG.JK", "JSMR.JK", "WIKA.JK", "PTPP.JK"],
     "HEALTHCARE": ["KLBF.JK", "MIKA.JK", "SILO.JK", "HEAL.JK", "SIDO.JK", "OMED.JK", "TSPC.JK", "IRRA.JK", "SAME.JK", "KAEF.JK"],
-    "BASIC MATERIALS": ["AMMN.JK", "TPIA.JK", "BRPT.JK", "MDKA.JK", "MBMA.JK", "NCKL.JK", "INCO.JK", "ANTM.JK", "INKP.JK", "SMGR.JK"],
+    "BASIC_MATERIALS": ["AMMN.JK", "TPIA.JK", "BRPT.JK", "MDKA.JK", "MBMA.JK", "NCKL.JK", "INCO.JK", "ANTM.JK", "INKP.JK", "SMGR.JK"],
     "INDUSTRIALS": ["ASII.JK", "UNTR.JK", "IMPC.JK", "PTRO.JK", "VKTR.JK", "AVIA.JK", "ARNA.JK", "MARK.JK", "HEXA.JK", "BNBR.JK"],
-    "TRANSPORTATION": ["SMDR.JK", "TMAS.JK", "ASSA.JK", "BIRD.JK", "GIAA.JK", "ELPI.JK", "HATM.JK", "IMJS.JK", "WEHA.JK", "LAJU.JK"]
+    "TRANSPORTATION_LOGISTIC": ["SMDR.JK", "TMAS.JK", "ASSA.JK", "BIRD.JK", "GIAA.JK", "ELPI.JK", "HATM.JK", "IMJS.JK", "WEHA.JK", "LAJU.JK"]
 }
 
 # ==========================================
-# 2. ENGINE ANALISIS TAKTIS
+# 2. ENGINE ANALISIS TAKTIS & RADAR TURBO
 # ==========================================
 
 @st.cache_data(ttl=180)
-def download_data(tickers):
-    return yf.download(tickers, period='8mo', group_by='ticker', progress=False)
+def download_data_turbo(tickers):
+    """Mesin Asynchronous Sweeping: Mengunduh data puluhan saham serentak dalam hitungan detik."""
+    hasil_data = {}
+    with ThreadPoolExecutor(max_workers=20) as executor:
+        future_to_ticker = {executor.submit(lambda t: yf.Ticker(t).history(period='8mo'), ticker): ticker for ticker in tickers}
+        for future in as_completed(future_to_ticker):
+            ticker = future_to_ticker[future]
+            try:
+                df = future.result()
+                if not df.empty:
+                    # Menyesuaikan zona waktu agar seragam
+                    if df.index.tz is None:
+                        df.index = df.index.tz_localize('UTC')
+                    hasil_data[ticker] = df
+            except Exception as e:
+                pass
+    return hasil_data
 
 def kalkulasi_unit(ticker, df, tanggal_maks, waktu_sekarang):
     try:
-        df = df.dropna(subset=['Close'])
         if len(df) < 120 or (tanggal_maks.date() - df.index[-1].date()).days > 7: return None
         close, vol = df['Close'], df['Volume']
         if (close * vol).tail(10).mean() < BATAS_LIKUIDITAS_RP: return None
@@ -126,16 +155,20 @@ def unit_guardian(kode, df, porto):
     status = "✅ Aman"
     
     if 'tanggal_beli' in porto and 'pengali_atr' in porto:
-        tgl_beli = pd.to_datetime(porto['tanggal_beli']).tz_localize(df.index.tz)
-        tr = pd.concat([df['High'] - df['Low'], np.abs(df['High'] - df['Close'].shift()), np.abs(df['Low'] - df['Close'].shift())], axis=1).max(axis=1)
-        df_porto = df[df.index >= tgl_beli]
-        if not df_porto.empty:
-            batas_ts = float(df_porto['High'].max()) - (float(tr.rolling(14).mean().iloc[-1]) * float(porto['pengali_atr']))
-            if harga_skrg <= batas_ts and harga_skrg > modal: status = "💰 Kunci Laba"
+        try:
+            tgl_beli = pd.to_datetime(porto['tanggal_beli'])
+            if tgl_beli.tzinfo is None: tgl_beli = tgl_beli.tz_localize('UTC')
+            
+            tr = pd.concat([df['High'] - df['Low'], np.abs(df['High'] - df['Close'].shift()), np.abs(df['Low'] - df['Close'].shift())], axis=1).max(axis=1)
+            df_porto = df[df.index >= tgl_beli]
+            if not df_porto.empty:
+                batas_ts = float(df_porto['High'].max()) - (float(tr.rolling(14).mean().iloc[-1]) * float(porto['pengali_atr']))
+                if harga_skrg <= batas_ts and harga_skrg > modal: status = "💰 Kunci Laba"
+        except: pass
             
     if 'stop_loss_pct' in porto and harga_skrg <= modal * (1 - (porto['stop_loss_pct'] / 100)): status = "🚨 Evakuasi"
     
-    pnl_pct = ((harga_skrg - modal) / modal) * 100
+    pnl_pct = ((harga_skrg - modal) / modal) * 100 if modal > 0 else 0
     return {"Ticker": kode.replace(".JK", ""), "Harga": harga_skrg, "PnL": pnl_pct, "Status": status}
 
 def highlight_cells(val, col):
@@ -146,12 +179,42 @@ def highlight_cells(val, col):
 FORMAT_ANGKA = {"Harga": "{:,.0f}", "Target Profit": "{:,.0f}", "Support": "{:,.0f}", "RSI": "{:.1f}", "Sqz_Ratio": "{:.2f}x"}
 
 # ==========================================
-# 3. INTERFACE BRIEFING & EKSEKUSI KUDA TROYA
+# 3. INTERFACE BRIEFING & EKSEKUSI
 # ==========================================
 waktu_wib = datetime.now(timezone.utc) + timedelta(hours=7)
 
-st.sidebar.header("🎛️ KONTROL RADAR")
+# --- PANEL GUDANG SENJATA (DYNAMIC UI) ---
+st.sidebar.markdown("### 🗄️ GUDANG SENJATA")
+st.sidebar.caption("Edit, tambah, atau hapus aset yang sedang diamankan.")
+
+df_porto = pd.DataFrame.from_dict(PORTOFOLIO_AKTIF, orient='index')
+if not df_porto.empty:
+    df_porto.reset_index(inplace=True)
+    df_porto.rename(columns={'index': 'Ticker'}, inplace=True)
+else:
+    df_porto = pd.DataFrame(columns=['Ticker', 'harga_beli', 'stop_loss_pct', 'pengali_atr', 'tanggal_beli'])
+
+edited_df = st.sidebar.data_editor(df_porto, num_rows="dynamic", use_container_width=True, hide_index=True)
+
+if st.sidebar.button("💾 Simpan Gudang"):
+    new_porto = {}
+    for _, row in edited_df.iterrows():
+        if pd.notna(row['Ticker']) and str(row['Ticker']).strip() != "":
+            t = str(row['Ticker']).strip().upper()
+            if not t.endswith(".JK"): t += ".JK"
+            new_porto[t] = {
+                "harga_beli": float(row['harga_beli']) if pd.notna(row['harga_beli']) else 0.0,
+                "stop_loss_pct": float(row['stop_loss_pct']) if pd.notna(row['stop_loss_pct']) else 0.0,
+                "pengali_atr": float(row['pengali_atr']) if pd.notna(row['pengali_atr']) else 1.5,
+                "tanggal_beli": str(row['tanggal_beli']) if pd.notna(row['tanggal_beli']) else datetime.now().strftime("%Y-%m-%d")
+            }
+    simpan_portofolio(new_porto)
+    st.sidebar.success("Gudang senjata berhasil diperbarui!")
+    st.rerun()
+
+st.sidebar.divider()
 alarm_aktif = st.sidebar.toggle("🔊 Alarm Suara", value=True)
+# -----------------------------------------
 
 berita_katalis = {}
 if os.path.exists("katalis_aktif.csv"):
@@ -160,26 +223,26 @@ if os.path.exists("katalis_aktif.csv"):
         berita_katalis = pd.Series(df_kat.Katalis.values, index=df_kat.Ticker).to_dict()
     except: pass
 
-st.markdown("## 🎖️ THE COMMANDER V6.3")
-st.caption(f"📅 **{waktu_wib.strftime('%Y-%m-%d %H:%M WIB')}** | Trojan Horse Update")
+st.markdown("## 🎖️ THE COMMANDER V7.0")
+st.caption(f"📅 **{waktu_wib.strftime('%Y-%m-%d %H:%M WIB')}** | Turbo & Dynamic UI Update")
 
-# Placeholder untuk menampilkan Radar IHSG di paling atas nanti
 panel_ihsg = st.empty()
 
-with st.spinner("Menyelundupkan Satelit & Mengumpulkan Intelijen..."):
-    semua_target = [t for t in list(set(DAFTAR_SAHAM_INTI + list(PORTOFOLIO_AKTIF.keys()))) if t not in DAFTAR_HITAM]
-    
-    # 🔥 TAKTIK KUDA TROYA: Menyelundupkan ^JKSE ke dalam rombongan besar
-    if "^JKSE" not in semua_target:
-        semua_target.append("^JKSE")
+with st.spinner("Menghidupkan Radar Turbo..."):
+    semua_target = list(set(DAFTAR_SAHAM_INTI + list(PORTOFOLIO_AKTIF.keys())))
+    if "^JKSE" not in semua_target: semua_target.append("^JKSE")
+    semua_target = [t for t in semua_target if t not in DAFTAR_HITAM or t == "^JKSE"]
         
-    data_all = download_data(semua_target)
-    tanggal_maks = max([data_all[t].index[-1] for t in semua_target if t != "^JKSE" and not data_all[t].empty], default=waktu_wib)
+    data_all = download_data_turbo(semua_target)
     
-    # --- PROSES DATA IHSG (Disaring dari hasil download massal) ---
+    tanggal_maks = waktu_wib
+    if data_all:
+        tanggal_maks = max([df.index[-1] for t, df in data_all.items() if not df.empty], default=waktu_wib)
+    
+    # --- PROSES DATA IHSG ---
     ihsg_val, ihsg_pct, ihsg_stat = None, None, "Menunggu Sinyal"
     if "^JKSE" in data_all and not data_all["^JKSE"].empty:
-        df_ihsg = data_all["^JKSE"].dropna(subset=['Close'])
+        df_ihsg = data_all["^JKSE"]
         if len(df_ihsg) >= 20:
             close_skrg = float(df_ihsg['Close'].iloc[-1])
             close_kmrn = float(df_ihsg['Close'].iloc[-2])
@@ -188,19 +251,16 @@ with st.spinner("Menyelundupkan Satelit & Mengumpulkan Intelijen..."):
             ihsg_val = close_skrg
             ihsg_stat = "🐂 BULLISH - Cuaca Cerah!" if close_skrg >= ma20 else "🐻 BEARISH - Hati-hati Badai Beruang!"
             
-    # Tembakkan ke Placeholder Paling Atas
-    if ihsg_val is not None:
-        panel_ihsg.info(f"🌩️ **RADAR IHSG:** {ihsg_val:,.0f} ({ihsg_pct:+.2f}%) | **Status Makro:** {ihsg_stat}")
-    else:
-        panel_ihsg.error("📡 **RADAR IHSG:** Data ^JKSE Kosong (Bursa Libur atau Data Belum Masuk)")
-    # -------------------------------------------------------------
+    if ihsg_val is not None: panel_ihsg.info(f"🌩️ **RADAR IHSG:** {ihsg_val:,.0f} ({ihsg_pct:+.2f}%) | **Status Makro:** {ihsg_stat}")
+    else: panel_ihsg.error("📡 **RADAR IHSG:** Data ^JKSE Kosong")
+    # ------------------------
 
     hasil_tempur, guardian_data, alarm_trigger = [], [], False
 
     for t in semua_target:
-        if t == "^JKSE": continue # Abaikan IHSG untuk kalkulasi saham ritel
+        if t == "^JKSE" or t not in data_all: continue 
 
-        if t in PORTOFOLIO_AKTIF and not data_all[t].empty:
+        if t in PORTOFOLIO_AKTIF:
             guardian_data.append(unit_guardian(t, data_all[t], PORTOFOLIO_AKTIF[t]))
 
         res = kalkulasi_unit(t, data_all[t], tanggal_maks, waktu_wib)
@@ -260,7 +320,6 @@ with st.container(border=True):
 
 with st.container(border=True):
     st.markdown("#### 🛡️ STATUS MARKAS & THE MAGE V2.0")
-    
     st.markdown("**🔰 The Guardian (Aset Aktif):**")
     if guardian_data:
         cols = st.columns(len(guardian_data))
@@ -268,7 +327,7 @@ with st.container(border=True):
             with cols[i]:
                 st.metric(label=f"**{g['Ticker']}**", value=f"Rp {g['Harga']:,.0f}", delta=f"{g['PnL']:.2f}%")
                 st.caption(f"Status: **{g['Status']}**")
-    else: st.write("   _KOSONG_")
+    else: st.write("   _Gudang Senjata Kosong_")
         
     st.markdown("**🌊 Arus Uang (Rotasi Sektor Visual):**")
     if not df_final.empty:
@@ -281,18 +340,13 @@ with st.container(border=True):
                 hijau = df_sektor["Is_Green"].sum()
                 pct = (hijau / total) * 100
                 mage_data.append((sek, pct))
-        
         mage_data.sort(key=lambda x: x[1], reverse=True)
-        
         for sek, pct in mage_data:
             c1, c2 = st.columns([1, 4])
             c1.write(f"**{sek}**")
-            if pct >= 50:
-                c2.progress(pct/100, text=f"🔥 {pct:.0f}%")
-            elif pct > 0:
-                c2.progress(pct/100, text=f"❄️ {pct:.0f}%")
-            else:
-                c2.write("🧊 0%")
+            if pct >= 50: c2.progress(pct/100, text=f"🔥 {pct:.0f}%")
+            elif pct > 0: c2.progress(pct/100, text=f"❄️ {pct:.0f}%")
+            else: c2.write("🧊 0%")
 
 with st.container(border=True):
     st.markdown("#### 📊 PETA TACTICAL")
@@ -303,12 +357,9 @@ with st.container(border=True):
             if ticker_jk in data_all and not data_all[ticker_jk].empty:
                 df_chart = data_all[ticker_jk].tail(60)
                 fig = go.Figure(data=[go.Candlestick(x=df_chart.index, open=df_chart['Open'], high=df_chart['High'], low=df_chart['Low'], close=df_chart['Close'])])
-                
                 tp = (df_chart['High'] + df_chart['Low'] + df_chart['Close']) / 3
                 vwap = (tp * df_chart['Volume']).rolling(10).sum() / df_chart['Volume'].rolling(10).sum()
-                
                 fig.add_trace(go.Scatter(x=df_chart.index, y=df_chart['Close'].rolling(20).mean(), line=dict(color='orange', width=1), name="MA20"))
                 fig.add_trace(go.Scatter(x=df_chart.index, y=vwap, line=dict(color='cyan', width=1, dash='dot'), name="VWAP 10d"))
-                
                 fig.update_layout(template="plotly_dark", height=400, margin=dict(l=10, r=10, t=10, b=10), xaxis_rangeslider_visible=False)
                 st.plotly_chart(fig, use_container_width=True)

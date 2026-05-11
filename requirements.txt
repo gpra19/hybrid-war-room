@@ -3,3 +3,4 @@ python-dotenv
 yfinance
 streamlit
 streamlit-autorefresh
+plotly

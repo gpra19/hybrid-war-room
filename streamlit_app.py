@@ -8,13 +8,14 @@ from streamlit_autorefresh import st_autorefresh
 import plotly.graph_objects as go
 
 # ==========================================
-# 1. PENGATURAN MARKAS (V6.0 ADVANCED ENGINE)
+# 1. PENGATURAN MARKAS (V6.1 ADVANCED ENGINE)
 # ==========================================
-st.set_page_config(page_title="The Commander V6.0", layout="centered", page_icon="⚔️")
+st.set_page_config(page_title="The Commander V6.1", layout="centered", page_icon="⚔️")
 
 st.markdown("""
     <style>
     .alarm-box { background-color: #4a1919; padding: 10px; border-radius: 5px; border-left: 5px solid #ff4b4b; margin-bottom: 15px;}
+    .guardian-card { padding: 10px; border-radius: 8px; border: 1px solid #444; background-color: #1e2630; margin-bottom: 10px; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -124,15 +125,20 @@ def kalkulasi_unit(ticker, df, tanggal_maks, waktu_sekarang):
 
 def unit_guardian(kode, df, porto):
     harga_skrg, modal = float(df['Close'].iloc[-1]), float(porto['harga_beli'])
+    status = "✅ Aman"
+    
     if 'tanggal_beli' in porto and 'pengali_atr' in porto:
         tgl_beli = pd.to_datetime(porto['tanggal_beli']).tz_localize(df.index.tz)
         tr = pd.concat([df['High'] - df['Low'], np.abs(df['High'] - df['Close'].shift()), np.abs(df['Low'] - df['Close'].shift())], axis=1).max(axis=1)
         df_porto = df[df.index >= tgl_beli]
         if not df_porto.empty:
             batas_ts = float(df_porto['High'].max()) - (float(tr.rolling(14).mean().iloc[-1]) * float(porto['pengali_atr']))
-            if harga_skrg <= batas_ts and harga_skrg > modal: return "Kunci Laba"
-    if 'stop_loss_pct' in porto and harga_skrg <= modal * (1 - (porto['stop_loss_pct'] / 100)): return "Evakuasi"
-    return "Aman"
+            if harga_skrg <= batas_ts and harga_skrg > modal: status = "💰 Kunci Laba"
+            
+    if 'stop_loss_pct' in porto and harga_skrg <= modal * (1 - (porto['stop_loss_pct'] / 100)): status = "🚨 Evakuasi"
+    
+    pnl_pct = ((harga_skrg - modal) / modal) * 100
+    return {"Ticker": kode.replace(".JK", ""), "Harga": harga_skrg, "PnL": pnl_pct, "Status": status}
 
 def highlight_cells(val, col):
     if col == "RSI" and val < 40: return 'background-color: #4a1919; color: white;'
@@ -142,7 +148,7 @@ def highlight_cells(val, col):
 FORMAT_ANGKA = {"Harga": "{:,.0f}", "Target Profit": "{:,.0f}", "Support": "{:,.0f}", "RSI": "{:.1f}", "Sqz_Ratio": "{:.2f}x"}
 
 # ==========================================
-# 3. INTERFACE BRIEFING V6.0
+# 3. INTERFACE BRIEFING V6.1
 # ==========================================
 waktu_wib = datetime.now(timezone.utc) + timedelta(hours=7)
 
@@ -156,26 +162,24 @@ if os.path.exists("katalis_aktif.csv"):
         berita_katalis = pd.Series(df_kat.Katalis.values, index=df_kat.Ticker).to_dict()
     except: pass
 
-st.markdown("## 🎖️ THE COMMANDER V6.0")
-st.caption(f"📅 **{waktu_wib.strftime('%Y-%m-%d %H:%M WIB')}** | Ghost & Mage Upgrade")
+st.markdown("## 🎖️ THE COMMANDER V6.1")
+st.caption(f"📅 **{waktu_wib.strftime('%Y-%m-%d %H:%M WIB')}** | Visual Guardian Upgrade")
 
-with st.spinner("Mengumpulkan Intelijen (Menghitung VWAP)..."):
+with st.spinner("Mengumpulkan Intelijen..."):
     semua_target = [t for t in list(set(DAFTAR_SAHAM_INTI + list(PORTOFOLIO_AKTIF.keys()))) if t not in DAFTAR_HITAM]
     data_all = download_data(semua_target)
     tanggal_maks = max([data_all[t].index[-1] for t in semua_target if not data_all[t].empty], default=waktu_wib)
     
-    hasil_tempur, guardian_status, alarm_trigger = [], [], False
+    hasil_tempur, guardian_data, alarm_trigger = [], [], False
 
     for t in semua_target:
         if t in PORTOFOLIO_AKTIF and not data_all[t].empty:
-            stat = unit_guardian(t, data_all[t], PORTOFOLIO_AKTIF[t])
-            if stat != "Aman": guardian_status.append(f"{t.replace('.JK','')} ({stat})")
+            guardian_data.append(unit_guardian(t, data_all[t], PORTOFOLIO_AKTIF[t]))
 
         res = kalkulasi_unit(t, data_all[t], tanggal_maks, waktu_wib)
         if res:
             res["Berita"] = f"🚨 {berita_katalis[t]}" if t in berita_katalis else "-"
             
-            # Prioritas Sinyal Baru
             if res["Is_Cross"] and res["Is_Break"]: res["Sinyal"] = "⚔️ Full Assault"
             elif res["Is_Ghost"]: res["Sinyal"] = "👻 Ghost Accumulation"
             elif res["Is_Squeeze"] and res["Is_Cross"]: res["Sinyal"] = "🧨 Triggered Bomb"
@@ -229,8 +233,18 @@ with st.container(border=True):
 
 with st.container(border=True):
     st.markdown("#### 🛡️ STATUS MARKAS & THE MAGE V2.0")
-    if guardian_status: st.markdown(f"**🔰 The Guardian:** Waspada! {', '.join(guardian_status)}")
-    else: st.markdown("**🔰 The Guardian:** Aman.")
+    
+    # --- HOTFIX V6.1: Visual Guardian Metrics ---
+    st.markdown("**🔰 The Guardian (Aset Aktif):**")
+    if guardian_data:
+        cols = st.columns(len(guardian_data))
+        for i, g in enumerate(guardian_data):
+            with cols[i]:
+                # Menggunakan st.metric untuk visual yang elegan
+                st.metric(label=f"**{g['Ticker']}**", value=f"Rp {g['Harga']:,.0f}", delta=f"{g['PnL']:.2f}%")
+                st.caption(f"Status: **{g['Status']}**")
+    else: st.write("   _KOSONG_")
+    # --------------------------------------------
         
     st.markdown("**🌊 Arus Uang (Rotasi Sektor Visual):**")
     if not df_final.empty:
@@ -244,13 +258,11 @@ with st.container(border=True):
                 pct = (hijau / total) * 100
                 mage_data.append((sek, pct))
         
-        # Urutkan sektor dari yang terkuat ke terlemah
         mage_data.sort(key=lambda x: x[1], reverse=True)
         
         for sek, pct in mage_data:
             c1, c2 = st.columns([1, 4])
             c1.write(f"**{sek}**")
-            # Tampilan Progress Bar Dinamis
             if pct >= 50:
                 c2.progress(pct/100, text=f"🔥 {pct:.0f}%")
             elif pct > 0:
@@ -267,7 +279,7 @@ with st.container(border=True):
             if ticker_jk in data_all and not data_all[ticker_jk].empty:
                 df_chart = data_all[ticker_jk].tail(60)
                 fig = go.Figure(data=[go.Candlestick(x=df_chart.index, open=df_chart['Open'], high=df_chart['High'], low=df_chart['Low'], close=df_chart['Close'])])
-                # Menambahkan garis VWAP dan MA20
+                
                 tp = (df_chart['High'] + df_chart['Low'] + df_chart['Close']) / 3
                 vwap = (tp * df_chart['Volume']).rolling(10).sum() / df_chart['Volume'].rolling(10).sum()
                 

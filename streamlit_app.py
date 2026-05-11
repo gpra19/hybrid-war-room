@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 # ==========================================
 # 1. PENGATURAN MARKAS & AUTOPILOT
 # ==========================================
-st.set_page_config(page_title="Hybrid War Room V5.0", layout="wide", page_icon="⚔️")
+st.set_page_config(page_title="Hybrid War Room V5.1", layout="wide", page_icon="⚔️")
 
 # CSS Termal & UI
 st.markdown("""
@@ -20,8 +20,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Autopilot (Refresh 1 Menit)
-st_autorefresh(interval=60000, key="commander_radar_ping")
+# Autopilot: Refresh diubah ke 3 Menit (180.000 ms) agar Anti-Blokir Yahoo Finance
+st_autorefresh(interval=180000, key="commander_radar_ping")
 
 BATAS_LIKUIDITAS_RP = 5_000_000_000 
 RASIO_SQUEEZE_MAKS = 1.1
@@ -31,7 +31,7 @@ PORTOFOLIO_AKTIF = {
     "MAPI.JK": {"harga_beli": 1407.10, "stop_loss_pct": 1.8, "pengali_atr": 1.5, "tanggal_beli": "2026-05-08"}
 }
 
-# 239 Pasukan Inti Jenderal
+# 238 Pasukan Inti Jenderal (BUMN.JK telah dibuang)
 DAFTAR_SAHAM_INTI = [
     "BBCA.JK", "SSIA.JK", "DMAS.JK", "INTP.JK", "SMGR.JK", "PTPP.JK", "WTON.JK", "TLKM.JK", "ASII.JK", "GOTO.JK",
     "AMMN.JK", "BRIS.JK", "BBNI.JK", "BBRI.JK", "BMRI.JK", "BBTN.JK", "ADRO.JK", "ANTM.JK", "MDKA.JK", "PTBA.JK",
@@ -74,10 +74,10 @@ SEKTOR = {
 }
 
 # ==========================================
-# 2. ENGINE ANALISIS TAKTIS V5.0
+# 2. ENGINE ANALISIS TAKTIS V5.1 (HOTFIX)
 # ==========================================
 
-@st.cache_data(ttl=60)
+@st.cache_data(ttl=180) # Sinkron dengan autorefresh 3 menit
 def download_data(tickers):
     return yf.download(tickers, period='6mo', group_by='ticker', progress=False)
 
@@ -90,11 +90,14 @@ def kalkulasi_unit(ticker, df, tanggal_maks, waktu_sekarang):
         close, vol = df['Close'], df['Volume']
         if (close * vol).tail(10).mean() < BATAS_LIKUIDITAS_RP: return None
 
-        # Unit Saboteur & Scout
+        # --- HOTFIX ZERO DIVISION: Unit Saboteur ---
         sma20 = close.rolling(20).mean()
         std20 = close.rolling(20).std()
         bw = ((sma20 + 2*std20) - (sma20 - 2*std20)) / sma20 * 100
-        rasio_sqz = bw.iloc[-1] / bw.rolling(120).min().iloc[-1]
+        
+        bw_min_120 = bw.rolling(120).min().iloc[-1]
+        rasio_sqz = (bw.iloc[-1] / bw_min_120) if bw_min_120 > 0 else 999.0
+        # -------------------------------------------
         
         delta = close.diff()
         gain = delta.clip(lower=0).rolling(14).mean()
@@ -106,7 +109,7 @@ def kalkulasi_unit(ticker, df, tanggal_maks, waktu_sekarang):
         sig = macd.ewm(span=9).mean()
         is_cross = macd.iloc[-2] <= sig.iloc[-2] and macd.iloc[-1] > sig.iloc[-1]
         
-        # Auto Support & Resistance (Swing High/Low 20 Hari)
+        # Auto Support & Resistance
         sup = close.rolling(20).min().iloc[-1]
         res_tp = close.rolling(20).max().iloc[-1]
         
@@ -143,7 +146,6 @@ def unit_guardian(kode, df, porto):
 # ==========================================
 waktu_wib = datetime.now(timezone.utc) + timedelta(hours=7)
 
-# Sidebar: Kontrol Sistem
 st.sidebar.header("🎛️ KONTROL RADAR")
 alarm_aktif = st.sidebar.toggle("🔊 Alarm Suara (Squeeze/Cross)", value=True)
 
@@ -154,8 +156,8 @@ if os.path.exists("katalis_aktif.csv"):
         berita_katalis = pd.Series(df_kat.Katalis.values, index=df_kat.Ticker).to_dict()
     except: pass
 
-st.title("⚔️ THE COMMANDER: HYBRID WAR ROOM V5.0")
-st.write(f"📅 Mode: **AUTOPILOT (Refresh 1 Menit)** | 🕒 Jam Radar: **{waktu_wib.strftime('%H:%M:%S')} WIB**")
+st.title("⚔️ THE COMMANDER: HYBRID WAR ROOM V5.1")
+st.write(f"📅 Mode: **AUTOPILOT (Refresh 3 Menit)** | 🕒 Jam Radar: **{waktu_wib.strftime('%H:%M:%S')} WIB**")
 
 with st.spinner("Menyapu Medan Tempur..."):
     semua_target = list(set(DAFTAR_SAHAM_INTI + list(berita_katalis.keys()) + list(PORTOFOLIO_AKTIF.keys())))
@@ -191,7 +193,6 @@ if alarm_aktif and alarm_trigger:
     st.markdown("""<audio autoplay="true" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>""", unsafe_allow_html=True)
     st.markdown('<div class="alarm-box"><b>🚨 PERHATIAN KOMANDAN:</b> TARGET ASSAULT / TRIGGERED BOMB TERDETEKSI DI RADAR!</div>', unsafe_allow_html=True)
 
-# Fungsi Kamuflase Visual (Heatmap)
 def highlight_cells(val, col):
     if col == "RSI" and val < 40: return 'background-color: #4a1919; color: white;'
     if col == "Sqz_Ratio" and val <= RASIO_SQUEEZE_MAKS: return 'background-color: #524b11; color: white;'
@@ -204,11 +205,12 @@ st.subheader("📊 PETA TACTICAL (Live Chart)")
 ticker_pilihan = st.selectbox("Tembak Target Visual:", options=["PILIH SAHAM"] + sorted(df_final["Ticker"].tolist()) if not df_final.empty else ["PILIH SAHAM"])
 
 if ticker_pilihan != "PILIH SAHAM" and not data_all[ticker_pilihan].empty:
-    df_chart = data_all[ticker_pilihan].tail(60) # Tampilkan 60 hari terakhir
+    df_chart = data_all[ticker_pilihan].tail(60)
     fig = go.Figure(data=[go.Candlestick(x=df_chart.index, open=df_chart['Open'], high=df_chart['High'], low=df_chart['Low'], close=df_chart['Close'], name="Harga")])
     fig.add_trace(go.Scatter(x=df_chart.index, y=df_chart['Close'].rolling(20).mean(), line=dict(color='orange', width=1), name="MA20"))
     fig.update_layout(template="plotly_dark", height=400, margin=dict(l=20, r=20, t=20, b=20), xaxis_rangeslider_visible=False)
-    st.plotly_chart(fig, use_container_width=True)
+    # HOTFIX: Mengganti use_container_width dengan width="stretch" untuk masa depan Streamlit
+    st.plotly_chart(fig, width="stretch")
 
 # --- PANEL DASHBOARD UTAMA ---
 st.divider()
@@ -219,16 +221,19 @@ with c_kiri:
     if not df_final.empty:
         df_combo = df_final[df_final["Combo"] != "-"]
         if not df_combo.empty:
-            st_df = df_combo[["Ticker", "Combo", "Harga", "Target Profit", "Support", "Berita"]].style.map(lambda x: highlight_cells(x, "RSI"), subset=["Harga"]) # Dummy map just for styling consistency
-            st.dataframe(st_df, hide_index=True, use_container_width=True)
+            st_df = df_combo[["Ticker", "Combo", "Harga", "Target Profit", "Support", "Berita"]].style.map(lambda x: highlight_cells(x, "RSI"), subset=["Harga"]) 
+            # HOTFIX: Mengganti use_container_width
+            st.dataframe(st_df, hide_index=True, width="stretch")
         else: st.info("Mencari target Combo...")
+    else: st.info("Radar bersih.")
 
     st.subheader("🎯 RADAR PRIORITAS (Squeeze / Cross)")
     if not df_final.empty:
         df_pri = df_final[(df_final["Is_Squeeze"]) | (df_final["Is_Cross"])]
         if not df_pri.empty:
             st_df2 = df_pri[["Ticker", "Harga", "Target Profit", "Support", "Sqz_Ratio", "Berita"]].sort_values("Sqz_Ratio").style.map(lambda x: highlight_cells(x, "Sqz_Ratio"), subset=["Sqz_Ratio"])
-            st.dataframe(st_df2, hide_index=True, use_container_width=True)
+            # HOTFIX: Mengganti use_container_width
+            st.dataframe(st_df2, hide_index=True, width="stretch")
         else: st.info("Radar bersih.")
 
 with c_kanan:
@@ -250,4 +255,5 @@ st.divider()
 st.subheader("🏰 KILL ZONE (Oversold RSI < 40)")
 if not df_final.empty:
     st_df3 = df_final[df_final["RSI"] < 40][["Ticker", "Harga", "Target Profit", "Support", "RSI", "Berita"]].sort_values("RSI").style.map(lambda x: highlight_cells(x, "RSI"), subset=["RSI"])
-    st.dataframe(st_df3, use_container_width=True, hide_index=True)
+    # HOTFIX: Mengganti use_container_width
+    st.dataframe(st_df3, hide_index=True, width="stretch")

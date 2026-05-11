@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 # ==========================================
 # 1. PENGATURAN MARKAS (CARD UI & ADVANCED ENGINE)
 # ==========================================
-st.set_page_config(page_title="The Commander V5.7", layout="centered", page_icon="⚔️")
+st.set_page_config(page_title="The Commander V5.8", layout="centered", page_icon="⚔️")
 
 # CSS Termal & UI
 st.markdown("""
@@ -153,7 +153,7 @@ if os.path.exists("katalis_aktif.csv"):
         berita_katalis = pd.Series(df_kat.Katalis.values, index=df_kat.Ticker).to_dict()
     except: pass
 
-st.markdown("## 🎖️ THE COMMANDER V5.7")
+st.markdown("## 🎖️ THE COMMANDER V5.8")
 st.caption(f"📅 **{waktu_wib.strftime('%Y-%m-%d %H:%M WIB')}** | The Perfect Hybrid Edition")
 
 with st.spinner("Mengumpulkan Intelijen..."):
@@ -236,11 +236,14 @@ with st.container(border=True):
         mage_found = False
         idx = 1
         for sek, tickers in SEKTOR.items():
-            hijau = df_final[df_final["Ticker"] + ".JK".isin(tickers) if not df_final.empty else False] # Perbaikan filter sektor
-            hijau_count = sum(1 for t in tickers if t.replace('.JK', '') in df_final["Ticker"].values and df_final[df_final["Ticker"] == t.replace('.JK', '')]["Is_Green"].iloc[0])
-            total = sum(1 for t in tickers if t.replace('.JK', '') in df_final["Ticker"].values)
+            # HOTFIX: Pembersihan logika filter sektor yang aman dari Error
+            sektor_bersih = [t.replace('.JK', '') for t in tickers]
+            df_sektor = df_final[df_final["Ticker"].isin(sektor_bersih)]
+            
+            total = len(df_sektor)
             if total > 0:
-                pct = (hijau_count/total)*100
+                hijau = df_sektor["Is_Green"].sum()
+                pct = (hijau / total) * 100
                 if pct >= 50:
                     st.write(f"   {idx}. {sek}: {pct:.0f}%")
                     idx += 1

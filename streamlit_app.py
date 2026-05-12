@@ -166,7 +166,11 @@ def unit_guardian(kode, df, porto):
             df_porto = df[df.index >= tgl_beli]
             if not df_porto.empty:
                 batas_ts = float(df_porto['High'].max()) - (float(tr.rolling(14).mean().iloc[-1]) * float(porto['pengali_atr']))
-                if harga_skrg <= batas_ts and harga_skrg > modal: status = "💰 Kunci Laba"
+                
+                # BARIS KRUSIAL: Alarm HANYA berbunyi jika harga jatuh melewati batas ATR 
+                # *DAN* harga saat ini masih lebih tinggi dari modal Jenderal (Masih Cuan).
+                if harga_skrg <= batas_ts and harga_skrg > modal: 
+                    status = "💰 Kunci Laba"
         except: pass
             
     if 'stop_loss_pct' in porto and harga_skrg <= modal * (1 - (porto['stop_loss_pct'] / 100)): status = "🚨 Evakuasi"

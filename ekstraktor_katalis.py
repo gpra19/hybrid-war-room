@@ -21,10 +21,17 @@ KATALIS_KEYWORDS = [
 
 def bersihkan_html(raw_html):
     soup = BeautifulSoup(raw_html, "html.parser")
-    # KUNCI PERBAIKAN: Gunakan enter (\n) sebagai pemisah blok HTML, bukan spasi!
-    teks = soup.get_text(separator="\n")
-    # Bersihkan enter yang berlebihan (lebih dari 2) menjadi maksimal 2 enter
-    return re.sub(r'\n{3,}', '\n\n', teks)
+    # Taktik Sniper: Sisipkan ENTER hanya di akhir paragraf, daftar list, atau baris baru
+    for tag in soup.find_all(['br', 'p', 'div', 'li']):
+        tag.append('\n')
+    
+    # Ambil teks dengan pemisah spasi agar format inline (seperti <b>, <span>) tidak terputus
+    teks = soup.get_text(separator=" ")
+    
+    # Rapikan spasi dan enter yang berantakan
+    teks = re.sub(r' +', ' ', teks)
+    teks = re.sub(r'\n\s*\n', '\n', teks)
+    return teks
 
 def ekstrak_katalis_dari_email():
     if not GMAIL_USER or not GMAIL_PASS:
@@ -61,21 +68,20 @@ def ekstrak_katalis_dari_email():
             else:
                 body = msg.get_payload(decode=True).decode('utf-8', errors='ignore')
 
+            # Eksekusi Pembersihan V2.4
             teks_bersih = bersihkan_html(body)
             
-            # KUNCI PERBAIKAN 2: Pecah teks berdasarkan enter (\n) sehingga diproses PER BARIS/PARAGRAF
-            kalimat_list = teks_bersih.split('\n')
+            # Pecah berdasarkan kalimat utuh (Tanda titik ATAU enter)
+            kalimat_list = re.split(r'[\n\.]', teks_bersih)
             
             pangkalan_data_ticker = {}
             
             for kalimat in kalimat_list:
-                # Lewati baris kosong
                 if not kalimat.strip(): continue
                 
                 tickers_di_kalimat = re.findall(r'\$([A-Z]{4})\b', kalimat)
                 katalis_di_kalimat = [k for k in KATALIS_KEYWORDS if re.search(r'\b' + k + r'\b', kalimat, re.IGNORECASE)]
                 
-                # Hanya pasangkan JIKA dalam SATU BARIS/PARAGRAF yang sama terdapat Ticker dan Katalis
                 if tickers_di_kalimat and katalis_di_kalimat:
                     for t in tickers_di_kalimat:
                         ticker_full = f"{t}.JK"
@@ -100,8 +106,7 @@ def ekstrak_katalis_dari_email():
 
             if hasil_katalis:
                 df_baru = pd.DataFrame(hasil_katalis)
-                # KUNCI PERBAIKAN 3: Jika Jenderal menjalankan skrip berulang kali di hari yang sama,
-                # kita harus menghapus data di CSV hari tersebut agar tidak tumpang tindih.
+                # Filter agar data hari ini menimpa data lama jika skrip dijalankan 2x di hari yang sama
                 if not df_lama.empty:
                     df_lama = df_lama[df_lama['Tanggal'] != tgl_format]
                 
@@ -109,9 +114,9 @@ def ekstrak_katalis_dari_email():
                 df_final = df_gabungan.drop_duplicates(subset=['Ticker'], keep='first')
                 
                 df_final.to_csv(file_csv, index=False)
-                print(f"📄 Sukses! {len(hasil_katalis)} emiten berhasil diekstrak dengan presisi tinggi.")
+                print(f"📄 Sukses! {len(hasil_katalis)} emiten berhasil dipetakan dengan radar V2.4.")
             else:
-                print(f"🛑 Tidak ada sentimen yang memenuhi kriteria.")
+                print(f"🛑 Tidak ada sentimen operasional di surel ini.")
 
         mail.logout()
 

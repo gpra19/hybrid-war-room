@@ -6,12 +6,12 @@ import os
 from datetime import datetime
 from dotenv import load_dotenv
 from bs4 import BeautifulSoup
+from email.utils import parsedate_to_datetime
 
 load_dotenv()
 GMAIL_USER = os.getenv("GMAIL_USER").strip() if os.getenv("GMAIL_USER") else None
 GMAIL_PASS = os.getenv("GMAIL_PASS").strip() if os.getenv("GMAIL_PASS") else None
 
-# AMUNISI KATA KUNCI DIPERLUAS: Mencakup Laba, Proyek, dan Makro Sektoral
 KATALIS_KEYWORDS = [
     "Tender Offer", "Dividen", "Akuisisi", "Merger", "RUPS", "Buyback",
     "Laba", "Pendapatan", "Kinerja", "Kontrak", "Ekspansi", "Right Issue",
@@ -19,7 +19,6 @@ KATALIS_KEYWORDS = [
 ]
 
 def bersihkan_html(raw_html):
-    """Mengelupas seluruh kode sampah HTML menjadi teks murni"""
     soup = BeautifulSoup(raw_html, "html.parser")
     return soup.get_text(separator=" ")
 
@@ -37,15 +36,19 @@ def ekstrak_katalis_dari_email():
         status, messages = mail.search(None, '(FROM "snips@stockbit.com")')
 
         if status == 'OK' and messages[0]:
-            # Selalu incar email paling akhir (terbaru)
             id_list = messages[0].split()
             latest_id = id_list[-1]
             
             status, data = mail.fetch(latest_id, "(RFC822)")
-            print("✅ Email intelijen terbaru ditemukan! Memindai kode emiten ($TICKER)...")
-            
             raw_email = data[0][1]
             msg = email.message_from_bytes(raw_email)
+            
+            # --- PENYADAPAN TANGGAL SUREL ---
+            tgl_raw = msg.get("Date")
+            tgl_obj = parsedate_to_datetime(tgl_raw)
+            tgl_format = tgl_obj.strftime("%Y-%m-%d") # Format: 2026-05-13
+            
+            print(f"✅ Intelijen Stockbit Snips tanggal {tgl_format} ditemukan!")
             
             body = ""
             if msg.is_multipart():
@@ -57,10 +60,7 @@ def ekstrak_katalis_dari_email():
             else:
                 body = msg.get_payload(decode=True).decode('utf-8', errors='ignore')
 
-            # Terapkan pengelupasan HTML
             teks_bersih = bersihkan_html(body)
-
-            # Pecah kalimat berdasarkan titik, enter, atau tanda seru
             kalimat_list = re.split(r'[\n\.\!]', teks_bersih)
             
             hasil_katalis = []
@@ -70,37 +70,31 @@ def ekstrak_katalis_dari_email():
                 katalis_ditemukan = [k for k in KATALIS_KEYWORDS if re.search(r'\b' + k + r'\b', kalimat, re.IGNORECASE)]
                 
                 if katalis_ditemukan:
-                    # KUNCI AKURASI MUTLAK: Hanya cari 4 huruf yang diawali tanda "$" (contoh: $ASII)
                     potensi_ticker = re.findall(r'\$([A-Z]{4})\b', kalimat)
-                    
                     for t in potensi_ticker:
                         if t not in saham_tercatat:
                             hasil_katalis.append({
+                                "Tanggal": tgl_format,
                                 "Ticker": f"{t}.JK",
                                 "Katalis": ", ".join(katalis_ditemukan)
                             })
                             saham_tercatat.add(t)
 
-            # --- LOGIKA PENYIMPANAN PINTAR (APPEND BERSIH) ---
             file_csv = 'katalis_aktif.csv'
             if os.path.exists(file_csv):
                 df_lama = pd.read_csv(file_csv)
             else:
-                df_lama = pd.DataFrame(columns=["Ticker", "Katalis"])
+                df_lama = pd.DataFrame(columns=["Tanggal", "Ticker", "Katalis"])
 
             if hasil_katalis:
                 df_baru = pd.DataFrame(hasil_katalis)
-                
-                # Gabungkan data baru di atas data lama
                 df_gabungan = pd.concat([df_baru, df_lama], ignore_index=True)
-                
-                # Buang duplikat berdasarkan Ticker (Hanya simpan berita yang paling baru)
                 df_final = df_gabungan.drop_duplicates(subset=['Ticker'], keep='first')
                 
                 df_final.to_csv(file_csv, index=False)
-                print(f"📄 Sukses! {len(hasil_katalis)} katalis baru diperbarui di CSV. Total database intelijen: {len(df_final)} emiten.")
+                print(f"📄 Sukses! Intelijen tanggal {tgl_format} telah disuntikkan ke database.")
             else:
-                print("🛑 Tidak ada sentimen kunci yang cocok di email hari ini.")
+                print(f"🛑 Tidak ada sentimen kunci di email tanggal {tgl_format}.")
 
         mail.logout()
 

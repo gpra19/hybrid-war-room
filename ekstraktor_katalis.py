@@ -5,16 +5,23 @@ import re
 import os
 from datetime import datetime
 from dotenv import load_dotenv
+from bs4 import BeautifulSoup
 
 load_dotenv()
 GMAIL_USER = os.getenv("GMAIL_USER").strip() if os.getenv("GMAIL_USER") else None
 GMAIL_PASS = os.getenv("GMAIL_PASS").strip() if os.getenv("GMAIL_PASS") else None
 
-KATALIS_KEYWORDS = ["Tender Offer", "Dividen", "Akuisisi", "Merger", "RUPS", "Buyback"]
-# DAFTAR_MONITOR DIHAPUS - Radar kini membaca semua pergerakan
+# AMUNISI KATA KUNCI DIPERLUAS: Mencakup Laba, Proyek, dan Makro Sektoral
+KATALIS_KEYWORDS = [
+    "Tender Offer", "Dividen", "Akuisisi", "Merger", "RUPS", "Buyback",
+    "Laba", "Pendapatan", "Kinerja", "Kontrak", "Ekspansi", "Right Issue",
+    "Stock Split", "Proyek", "Joint Venture", "Subsidi", "Tarif"
+]
 
-# Daftar kata 4 huruf yang bukan saham (agar mesin tidak terkecoh)
-BUKAN_SAHAM = ["IHSG", "RUPS", "FED", "BANK", "DATA", "INFO", "NEWS"]
+def bersihkan_html(raw_html):
+    """Mengelupas seluruh kode sampah HTML menjadi teks murni"""
+    soup = BeautifulSoup(raw_html, "html.parser")
+    return soup.get_text(separator=" ")
 
 def ekstrak_katalis_dari_email():
     if not GMAIL_USER or not GMAIL_PASS:
@@ -28,15 +35,14 @@ def ekstrak_katalis_dari_email():
         
         mail.select("inbox")
         status, messages = mail.search(None, '(FROM "snips@stockbit.com")')
-        
-        if status != 'OK' or not messages[0]:
-            mail.select('"[Gmail]/All Mail"')
-            status, messages = mail.search(None, '(FROM "snips@stockbit.com")')
 
         if status == 'OK' and messages[0]:
-            latest_id = messages[0].split()[-1]
+            # Selalu incar email paling akhir (terbaru)
+            id_list = messages[0].split()
+            latest_id = id_list[-1]
+            
             status, data = mail.fetch(latest_id, "(RFC822)")
-            print("✅ Email intelijen terbaru ditemukan! Memindai seluruh kode emiten...")
+            print("✅ Email intelijen terbaru ditemukan! Memindai kode emiten ($TICKER)...")
             
             raw_email = data[0][1]
             msg = email.message_from_bytes(raw_email)
@@ -44,44 +50,57 @@ def ekstrak_katalis_dari_email():
             body = ""
             if msg.is_multipart():
                 for part in msg.walk():
-                    if part.get_content_type() in ["text/plain", "text/html"]:
-                        try:
-                            body += part.get_payload(decode=True).decode('utf-8')
-                        except:
-                            pass
+                    if part.get_content_type() == "text/html":
+                        body += part.get_payload(decode=True).decode('utf-8', errors='ignore')
+                    elif part.get_content_type() == "text/plain" and not body:
+                        body += part.get_payload(decode=True).decode('utf-8', errors='ignore')
             else:
-                body = msg.get_payload(decode=True).decode('utf-8')
+                body = msg.get_payload(decode=True).decode('utf-8', errors='ignore')
 
-            # Memecah email per kalimat/paragraf untuk mencari konteks berita
-            kalimat_list = re.split(r'\n|\.', body)
+            # Terapkan pengelupasan HTML
+            teks_bersih = bersihkan_html(body)
+
+            # Pecah kalimat berdasarkan titik, enter, atau tanda seru
+            kalimat_list = re.split(r'[\n\.\!]', teks_bersih)
+            
             hasil_katalis = []
             saham_tercatat = set()
             
             for kalimat in kalimat_list:
-                # Cek apakah ada kata kunci katalis di kalimat ini
                 katalis_ditemukan = [k for k in KATALIS_KEYWORDS if re.search(r'\b' + k + r'\b', kalimat, re.IGNORECASE)]
                 
                 if katalis_ditemukan:
-                    # Cari semua kata yang terdiri dari 4 huruf kapital (potensi kode saham)
-                    potensi_ticker = re.findall(r'\b[A-Z]{4}\b', kalimat)
+                    # KUNCI AKURASI MUTLAK: Hanya cari 4 huruf yang diawali tanda "$" (contoh: $ASII)
+                    potensi_ticker = re.findall(r'\$([A-Z]{4})\b', kalimat)
+                    
                     for t in potensi_ticker:
-                        if t not in BUKAN_SAHAM and t not in saham_tercatat:
+                        if t not in saham_tercatat:
                             hasil_katalis.append({
                                 "Ticker": f"{t}.JK",
                                 "Katalis": ", ".join(katalis_ditemukan)
                             })
                             saham_tercatat.add(t)
 
-            if hasil_katalis:
-                df_katalis = pd.DataFrame(hasil_katalis)
+            # --- LOGIKA PENYIMPANAN PINTAR (APPEND BERSIH) ---
+            file_csv = 'katalis_aktif.csv'
+            if os.path.exists(file_csv):
+                df_lama = pd.read_csv(file_csv)
             else:
-                df_katalis = pd.DataFrame(columns=["Ticker", "Katalis"])
+                df_lama = pd.DataFrame(columns=["Ticker", "Katalis"])
+
+            if hasil_katalis:
+                df_baru = pd.DataFrame(hasil_katalis)
                 
-            df_katalis.to_csv('katalis_aktif.csv', index=False)
-            print(f"📄 Sukses! {len(hasil_katalis)} saham potensial ditambahkan ke 'katalis_aktif.csv'.")
-            
-        else:
-            print("🛑 Target email tidak ditemukan.")
+                # Gabungkan data baru di atas data lama
+                df_gabungan = pd.concat([df_baru, df_lama], ignore_index=True)
+                
+                # Buang duplikat berdasarkan Ticker (Hanya simpan berita yang paling baru)
+                df_final = df_gabungan.drop_duplicates(subset=['Ticker'], keep='first')
+                
+                df_final.to_csv(file_csv, index=False)
+                print(f"📄 Sukses! {len(hasil_katalis)} katalis baru diperbarui di CSV. Total database intelijen: {len(df_final)} emiten.")
+            else:
+                print("🛑 Tidak ada sentimen kunci yang cocok di email hari ini.")
 
         mail.logout()
 

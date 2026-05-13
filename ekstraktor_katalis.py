@@ -12,7 +12,6 @@ load_dotenv()
 GMAIL_USER = os.getenv("GMAIL_USER").strip() if os.getenv("GMAIL_USER") else None
 GMAIL_PASS = os.getenv("GMAIL_PASS").strip() if os.getenv("GMAIL_PASS") else None
 
-# Amunisi diperluas ke metrik operasional dan sinonim bisnis
 KATALIS_KEYWORDS = [
     "Tender Offer", "Dividen", "Akuisisi", "Merger", "RUPS", "Buyback",
     "Laba", "Pendapatan", "Penjualan", "Kinerja", "Kontrak", "Ekspansi", 
@@ -22,7 +21,10 @@ KATALIS_KEYWORDS = [
 
 def bersihkan_html(raw_html):
     soup = BeautifulSoup(raw_html, "html.parser")
-    return soup.get_text(separator=" ")
+    # KUNCI PERBAIKAN: Gunakan enter (\n) sebagai pemisah blok HTML, bukan spasi!
+    teks = soup.get_text(separator="\n")
+    # Bersihkan enter yang berlebihan (lebih dari 2) menjadi maksimal 2 enter
+    return re.sub(r'\n{3,}', '\n\n', teks)
 
 def ekstrak_katalis_dari_email():
     if not GMAIL_USER or not GMAIL_PASS:
@@ -60,28 +62,28 @@ def ekstrak_katalis_dari_email():
                 body = msg.get_payload(decode=True).decode('utf-8', errors='ignore')
 
             teks_bersih = bersihkan_html(body)
-            # Pemisahan lebih longgar agar konteks tidak terputus
-            kalimat_list = re.split(r'[\n\t]', teks_bersih)
             
-            # --- LOGIKA AGREGASI: Mengumpulkan semua katalis per Ticker ---
-            pangkalan_data_ticker = {} # Format: {"TLKM.JK": {"Laba", "Pendapatan"}}
+            # KUNCI PERBAIKAN 2: Pecah teks berdasarkan enter (\n) sehingga diproses PER BARIS/PARAGRAF
+            kalimat_list = teks_bersih.split('\n')
+            
+            pangkalan_data_ticker = {}
             
             for kalimat in kalimat_list:
-                # Cari ticker di kalimat ini
-                tickers_di_kalimat = re.findall(r'\$([A-Z]{4})\b', kalimat)
-                # Cari katalis di kalimat ini
-                katalis_di_kalimat = [k for k in KATALIS_KEYWORDS if re.search(r'\b' + k, kalimat, re.IGNORECASE)]
+                # Lewati baris kosong
+                if not kalimat.strip(): continue
                 
+                tickers_di_kalimat = re.findall(r'\$([A-Z]{4})\b', kalimat)
+                katalis_di_kalimat = [k for k in KATALIS_KEYWORDS if re.search(r'\b' + k + r'\b', kalimat, re.IGNORECASE)]
+                
+                # Hanya pasangkan JIKA dalam SATU BARIS/PARAGRAF yang sama terdapat Ticker dan Katalis
                 if tickers_di_kalimat and katalis_di_kalimat:
                     for t in tickers_di_kalimat:
                         ticker_full = f"{t}.JK"
                         if ticker_full not in pangkalan_data_ticker:
                             pangkalan_data_ticker[ticker_full] = set()
-                        # Tambahkan semua katalis yang ditemukan di kalimat tersebut
                         for k in katalis_di_kalimat:
                             pangkalan_data_ticker[ticker_full].add(k.capitalize())
 
-            # Konversi hasil agregasi ke format list untuk DataFrame
             hasil_katalis = []
             for ticker, set_katalis in pangkalan_data_ticker.items():
                 hasil_katalis.append({
@@ -98,11 +100,16 @@ def ekstrak_katalis_dari_email():
 
             if hasil_katalis:
                 df_baru = pd.DataFrame(hasil_katalis)
+                # KUNCI PERBAIKAN 3: Jika Jenderal menjalankan skrip berulang kali di hari yang sama,
+                # kita harus menghapus data di CSV hari tersebut agar tidak tumpang tindih.
+                if not df_lama.empty:
+                    df_lama = df_lama[df_lama['Tanggal'] != tgl_format]
+                
                 df_gabungan = pd.concat([df_baru, df_lama], ignore_index=True)
                 df_final = df_gabungan.drop_duplicates(subset=['Ticker'], keep='first')
                 
                 df_final.to_csv(file_csv, index=False)
-                print(f"📄 Sukses! {len(hasil_katalis)} emiten diperbarui dengan katalis agregat.")
+                print(f"📄 Sukses! {len(hasil_katalis)} emiten berhasil diekstrak dengan presisi tinggi.")
             else:
                 print(f"🛑 Tidak ada sentimen yang memenuhi kriteria.")
 

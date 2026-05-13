@@ -1,7 +1,8 @@
-Ticker,Katalis
-TRIS.JK,Dividen
-TLKM.JK,Dividen
-GOTO.JK,Buyback
-POWR.JK,Dividen
-MARK.JK,Dividen
-PTMR.JK,Akuisisi
+Tanggal,Ticker,Katalis
+2026-05-12,TLKM.JK,Laba
+2026-05-12,GOTO.JK,Buyback
+2026-05-12,ITMG.JK,Laba
+2026-05-12,POWR.JK,Dividen
+2026-05-12,MARK.JK,"Dividen, Laba"
+,TRIS.JK,Dividen
+,PTMR.JK,Akuisisi

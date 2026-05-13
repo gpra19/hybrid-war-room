@@ -4,3 +4,4 @@ yfinance
 streamlit
 streamlit-autorefresh
 plotly
+beautifulsoup4

@@ -9,6 +9,10 @@ env:
 jobs:
   ekstrak_katalis:
     runs-on: ubuntu-latest
+    
+    # KUNCI MUTLAK: Izin agar robot boleh melakukan "git push"
+    permissions:
+      contents: write
 
     steps:
       - name: Menurunkan Pasukan ke Lapangan
@@ -20,7 +24,8 @@ jobs:
           python-version: '3.10'
 
       - name: Memasang Amunisi
-        run: pip install pandas python-dotenv
+        # bs4 DITAMBAHKAN DI SINI!
+        run: pip install pandas python-dotenv beautifulsoup4
 
       - name: Membuka Gerbang Intelijen
         env:

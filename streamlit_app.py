@@ -23,6 +23,13 @@ st.markdown("""
 st_autorefresh(interval=180000, key="commander_radar_ping")
 
 DAFTAR_HITAM = ["BUMN.JK", "IHSG.JK", "LQ45.JK", "COMP.JK", "IDX.JK"]
+
+# DAFTAR KARANTINA: Saham yang dilarang operasional sementara (MSCI Deletion/Katalis Negatif)
+DAFTAR_KARANTINA = [
+    "BREN.JK", "AMMN.JK", "TPIA.JK", "DSSA.JK", "CUAN.JK", 
+    "ANTM.JK", "BSDE.JK", "SIDO.JK", "MIKA.JK", "TKIM.JK"
+]
+
 BATAS_LIKUIDITAS_RP = 5_000_000_000 
 RASIO_SQUEEZE_MAKS = 1.1
 FILE_PORTOFOLIO = "portofolio_aktif.json"
@@ -238,7 +245,9 @@ panel_ihsg = st.empty()
 with st.spinner("Menghidupkan Radar Turbo..."):
     semua_target = list(set(DAFTAR_SAHAM_INTI + list(PORTOFOLIO_AKTIF.keys())))
     if "^JKSE" not in semua_target: semua_target.append("^JKSE")
-    semua_target = [t for t in semua_target if t not in DAFTAR_HITAM or t == "^JKSE"]
+    
+    # EKSEKUSI KARANTINA: Mesin otomatis membuang target yang ada di DAFTAR_HITAM maupun DAFTAR_KARANTINA
+    semua_target = [t for t in semua_target if (t not in DAFTAR_HITAM and t not in DAFTAR_KARANTINA) or t == "^JKSE"]
         
     data_all = download_data_turbo(semua_target)
     

@@ -294,7 +294,7 @@ with st.spinner("Menghidupkan Radar Turbo..."):
 
 if alarm_aktif and alarm_trigger:
     st.markdown("""<audio autoplay="true" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>""", unsafe_allow_html=True)
-    st.markdown('<div class="alarm-box"><b>🚨 PERHATIAN KOMANDAN:</b> ANOMALI TARGET (ASSAULT / GHOST) TERDETEKSI!</div>', unsafe_allow_html=True)
+    st.markdown('<div class="alarm-box"><b>🚨 PERHATIAN KOMANDAN:</b> ANOMALI TARGET TERDETEKSI!</div>', unsafe_allow_html=True)
 
 with st.container(border=True):
     st.markdown("#### 🔥 OPERASI KHUSUS (COMBO & GHOST)")

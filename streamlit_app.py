@@ -7,7 +7,6 @@ import numpy as np
 from datetime import datetime, timedelta, timezone
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from streamlit_autorefresh import st_autorefresh
-import plotly.graph_objects as go
 
 # ==========================================
 # 1. PENGATURAN MARKAS (V7.0 TURBO ENGINE)
@@ -361,19 +360,3 @@ with st.container(border=True):
             if pct >= 50: c2.progress(pct/100, text=f"🔥 {pct:.0f}%")
             elif pct > 0: c2.progress(pct/100, text=f"❄️ {pct:.0f}%")
             else: c2.write("🧊 0%")
-
-with st.container(border=True):
-    st.markdown("#### 📊 PETA TACTICAL")
-    with st.expander("Buka Peta Visual (Live Chart)"):
-        ticker_pilihan = st.selectbox("Pilih Target:", options=["-"] + sorted(df_final["Ticker"].tolist()) if not df_final.empty else ["-"])
-        if ticker_pilihan != "-":
-            ticker_jk = ticker_pilihan + ".JK"
-            if ticker_jk in data_all and not data_all[ticker_jk].empty:
-                df_chart = data_all[ticker_jk].tail(60)
-                fig = go.Figure(data=[go.Candlestick(x=df_chart.index, open=df_chart['Open'], high=df_chart['High'], low=df_chart['Low'], close=df_chart['Close'])])
-                tp = (df_chart['High'] + df_chart['Low'] + df_chart['Close']) / 3
-                vwap = (tp * df_chart['Volume']).rolling(10).sum() / df_chart['Volume'].rolling(10).sum()
-                fig.add_trace(go.Scatter(x=df_chart.index, y=df_chart['Close'].rolling(20).mean(), line=dict(color='orange', width=1), name="MA20"))
-                fig.add_trace(go.Scatter(x=df_chart.index, y=vwap, line=dict(color='cyan', width=1, dash='dot'), name="VWAP 10d"))
-                fig.update_layout(template="plotly_dark", height=400, margin=dict(l=10, r=10, t=10, b=10), xaxis_rangeslider_visible=False)
-                st.plotly_chart(fig, use_container_width=True)

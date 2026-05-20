@@ -41,7 +41,8 @@ def muat_portofolio():
     # Default jika belum ada file
     return {
         "BBCA.JK": {"harga_beli": 7014.67, "stop_loss_pct": 5.0, "pengali_atr": 1.5, "tanggal_beli": "2026-04-21"},
-        "MAPI.JK": {"harga_beli": 1407.10, "stop_loss_pct": 1.8, "pengali_atr": 1.5, "tanggal_beli": "2026-05-08"}
+        "MAPI.JK": {"harga_beli": 1407.10, "stop_loss_pct": 1.8, "pengali_atr": 1.5, "tanggal_beli": "2026-05-08"},
+        "GOTO.JK": {"harga_beli": 1407.10, "stop_loss_pct": 1.8, "pengali_atr": 1.5, "tanggal_beli": "2026-05-20"}
     }
 
 def simpan_portofolio(data_porto):

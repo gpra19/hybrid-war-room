@@ -1,4 +1,15 @@
 Tanggal,Ticker,Katalis
+2026-05-26,ASII.JK,Dividen
+2026-05-26,BBTN.JK,Akuisisi
+2026-05-26,BTPN.JK,Akuisisi
+2026-05-26,BBRI.JK,Laba
+2026-05-26,UNTR.JK,"Kinerja, Penjualan, Volume"
+2026-05-26,NOBU.JK,Capex
+2026-05-26,MPMX.JK,Dividen
+2026-05-26,BNGA.JK,Laba
+2026-05-26,NRCA.JK,Dividen
+2026-05-26,WIIM.JK,Dividen
+2026-05-26,KLBF.JK,Dividen
 2026-05-25,BRIS.JK,Laba
 2026-05-25,SOFA.JK,Proyek
 2026-05-25,INTP.JK,Dividen
@@ -15,7 +26,6 @@ Tanggal,Ticker,Katalis
 2026-05-22,KREN.JK,Buyback
 2026-05-21,TLKM.JK,Rups
 2026-05-21,HMSP.JK,"Dividen, Pendapatan"
-2026-05-21,BBTN.JK,Laba
 2026-05-21,RMKE.JK,Stock split
 2026-05-21,CPIN.JK,"Dividen, Pendapatan"
 2026-05-21,SSIA.JK,Pendapatan
@@ -34,11 +44,9 @@ Tanggal,Ticker,Katalis
 2026-05-20,SRTG.JK,Dividen
 2026-05-20,TPMA.JK,Dividen
 2026-05-20,GOTO.JK,Tarif
-2026-05-19,BTPN.JK,"Buyback, Merger"
 2026-05-19,MAHA.JK,Buyback
 2026-05-19,DOID.JK,Buyback
 2026-05-19,IFSH.JK,"Akuisisi, Ekspansi"
-2026-05-18,ASII.JK,Akuisisi
 2026-05-13,BIPI.JK,Proyek
 2026-05-13,ELSA.JK,"Laba, Pendapatan"
 2026-05-12,ITMG.JK,Laba

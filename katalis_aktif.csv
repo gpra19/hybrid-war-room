@@ -1,4 +1,8 @@
 Tanggal,Ticker,Katalis
+2026-06-12,BBRI.JK,Buyback
+2026-06-12,MLBI.JK,Dividen
+2026-06-12,TBIG.JK,Dividen
+2026-06-12,MDIY.JK,Dividen
 2026-06-11,BMRI.JK,Laba
 2026-06-11,ASII.JK,Buyback
 2026-06-11,PTBA.JK,Dividen
@@ -54,7 +58,6 @@ Tanggal,Ticker,Katalis
 2026-05-29,HMSP.JK,Indeks
 2026-05-26,BBTN.JK,Akuisisi
 2026-05-26,BTPN.JK,Akuisisi
-2026-05-26,BBRI.JK,Laba
 2026-05-26,UNTR.JK,"Kinerja, Penjualan, Volume"
 2026-05-26,NOBU.JK,Capex
 2026-05-26,MPMX.JK,Dividen

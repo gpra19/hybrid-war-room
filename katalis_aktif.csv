@@ -1,4 +1,10 @@
 Tanggal,Ticker,Katalis
+2026-06-15,EMAS.JK,Kontrak
+2026-06-15,RMKE.JK,"Penjualan, Volume"
+2026-06-15,BYAN.JK,Dividen
+2026-06-15,TINS.JK,Dividen
+2026-06-15,JELI.JK,Dividen
+2026-06-15,YUPI.JK,Dividen
 2026-06-12,BBRI.JK,Buyback
 2026-06-12,MLBI.JK,Dividen
 2026-06-12,TBIG.JK,Dividen
@@ -77,7 +83,6 @@ Tanggal,Ticker,Katalis
 2026-05-22,SCMA.JK,Dividen
 2026-05-22,BWPT.JK,Laba
 2026-05-22,KREN.JK,Buyback
-2026-05-21,RMKE.JK,Stock split
 2026-05-21,CPIN.JK,"Dividen, Pendapatan"
 2026-05-21,SSIA.JK,Pendapatan
 2026-05-21,ENRG.JK,Pendapatan

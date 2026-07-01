@@ -1,4 +1,9 @@
 Tanggal,Ticker,Katalis
+2026-06-30,PGAS.JK,Kontrak
+2026-06-30,ERAA.JK,Dividen
+2026-06-30,NCKL.JK,Dividen
+2026-06-30,DLTA.JK,Dividen
+2026-06-30,SMGR.JK,"Penjualan, Volume"
 2026-06-29,IPCM.JK,"Dividen, Rups"
 2026-06-29,TBLA.JK,Dividen
 2026-06-29,MDKA.JK,Laba
@@ -96,13 +101,11 @@ Tanggal,Ticker,Katalis
 2026-05-26,WIIM.JK,Dividen
 2026-05-26,KLBF.JK,Dividen
 2026-05-25,SOFA.JK,Proyek
-2026-05-25,NCKL.JK,Buyback
 2026-05-25,DSSA.JK,Indeks
 2026-05-25,DAAZ.JK,Indeks
 2026-05-25,HILL.JK,Indeks
 2026-05-25,MLIA.JK,Indeks
 2026-05-25,ISSP.JK,Buyback
-2026-05-22,PGAS.JK,Dividen
 2026-05-22,SCMA.JK,Dividen
 2026-05-22,BWPT.JK,Laba
 2026-05-22,KREN.JK,Buyback
@@ -114,7 +117,6 @@ Tanggal,Ticker,Katalis
 2026-05-21,NISP.JK,Akuisisi
 2026-05-21,PTPP.JK,Kontrak
 2026-05-21,GEMS.JK,Dividen
-2026-05-20,SMGR.JK,"Penjualan, Volume"
 2026-05-20,BFIN.JK,Dividen
 2026-05-20,CBDK.JK,Buyback
 2026-05-20,SRTG.JK,Dividen

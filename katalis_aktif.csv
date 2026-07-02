@@ -1,4 +1,9 @@
 Tanggal,Ticker,Katalis
+2026-07-01,DEWA.JK,Kontrak
+2026-07-01,UNTR.JK,Buyback
+2026-07-01,PBSA.JK,Dividen
+2026-07-01,MTEL.JK,Dividen
+2026-07-01,BBHI.JK,Buyback
 2026-06-30,PGAS.JK,Kontrak
 2026-06-30,ERAA.JK,Dividen
 2026-06-30,NCKL.JK,Dividen
@@ -8,7 +13,6 @@ Tanggal,Ticker,Katalis
 2026-06-29,TBLA.JK,Dividen
 2026-06-29,MDKA.JK,Laba
 2026-06-29,MBMA.JK,Laba
-2026-06-29,UNTR.JK,"Kinerja, Penjualan, Volume"
 2026-06-26,INET.JK,Proyek
 2026-06-26,WIFI.JK,Kemitraan
 2026-06-26,LSIP.JK,Dividen

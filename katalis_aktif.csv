@@ -1,4 +1,6 @@
 Tanggal,Ticker,Katalis
+2026-07-07,BBNI.JK,Buyback
+2026-07-07,PRDA.JK,Ekspansi
 2026-07-06,PGAS.JK,Proyek
 2026-07-06,GOTO.JK,Laba
 2026-07-02,DSSA.JK,Akuisisi
@@ -33,7 +35,6 @@ Tanggal,Ticker,Katalis
 2026-06-25,PTRO.JK,"Kontrak, Proyek"
 2026-06-23,BBCA.JK,Kinerja
 2026-06-23,BMRI.JK,Kinerja
-2026-06-23,BBNI.JK,"Capex, Kinerja"
 2026-06-23,ESSA.JK,Dividen
 2026-06-23,ERAL.JK,Capex
 2026-06-23,CFIN.JK,Dividen

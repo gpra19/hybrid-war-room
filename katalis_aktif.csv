@@ -1,4 +1,10 @@
 Tanggal,Ticker,Katalis
+2026-07-08,SAME.JK,Capex
+2026-07-08,RSGK.JK,Capex
+2026-07-08,BNGA.JK,Capex
+2026-07-08,NISP.JK,Capex
+2026-07-08,BACH.JK,"Laba, Pendapatan"
+2026-07-08,EMMI.JK,"Laba, Pendapatan"
 2026-07-07,BBNI.JK,Buyback
 2026-07-07,PRDA.JK,Ekspansi
 2026-07-06,PGAS.JK,Proyek
@@ -30,7 +36,6 @@ Tanggal,Ticker,Katalis
 2026-06-25,MAPA.JK,"Laba, Pendapatan"
 2026-06-25,GGRM.JK,Dividen
 2026-06-25,DVLA.JK,Dividen
-2026-06-25,BNGA.JK,Laba
 2026-06-25,SMDR.JK,Dividen
 2026-06-25,PTRO.JK,"Kontrak, Proyek"
 2026-06-23,BBCA.JK,Kinerja
@@ -120,7 +125,6 @@ Tanggal,Ticker,Katalis
 2026-05-21,ENRG.JK,Pendapatan
 2026-05-21,RAJA.JK,Pendapatan
 2026-05-21,JSMR.JK,Dividen
-2026-05-21,NISP.JK,Akuisisi
 2026-05-21,PTPP.JK,Kontrak
 2026-05-21,GEMS.JK,Dividen
 2026-05-20,BFIN.JK,Dividen

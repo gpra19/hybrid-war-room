@@ -1,7 +1,17 @@
 Tanggal,Ticker,Katalis
+2026-07-15,BREN.JK,Akuisisi
+2026-07-15,INTP.JK,"Penjualan, Volume"
+2026-07-15,MLPT.JK,Stock split
+2026-07-15,PRDA.JK,"Laba, Pendapatan"
+2026-07-15,ARTO.JK,Indeks
+2026-07-15,BUKA.JK,Indeks
+2026-07-15,ESSA.JK,Indeks
+2026-07-15,ANTM.JK,Indeks
+2026-07-15,FILM.JK,Indeks
+2026-07-15,ENRG.JK,Indeks
+2026-07-15,BRMS.JK,Indeks
+2026-07-15,KLBF.JK,Indeks
 2026-07-14,HRTA.JK,"Laba, Pendapatan"
-2026-07-14,ARTO.JK,"Merger, Proyek"
-2026-07-14,ENRG.JK,Proyek
 2026-07-14,SGER.JK,Proyek
 2026-07-14,BULL.JK,Proyek
 2026-07-14,TOBA.JK,Proyek
@@ -28,7 +38,6 @@ Tanggal,Ticker,Katalis
 2026-07-08,BACH.JK,"Laba, Pendapatan"
 2026-07-08,EMMI.JK,"Laba, Pendapatan"
 2026-07-07,BBNI.JK,Buyback
-2026-07-07,PRDA.JK,Ekspansi
 2026-07-06,PGAS.JK,Proyek
 2026-07-06,GOTO.JK,Laba
 2026-07-02,DSSA.JK,Akuisisi
@@ -59,7 +68,6 @@ Tanggal,Ticker,Katalis
 2026-06-25,SMDR.JK,Dividen
 2026-06-25,PTRO.JK,"Kontrak, Proyek"
 2026-06-23,BMRI.JK,Kinerja
-2026-06-23,ESSA.JK,Dividen
 2026-06-23,ERAL.JK,Capex
 2026-06-23,CFIN.JK,Dividen
 2026-06-19,BSSR.JK,Dividen
@@ -69,7 +77,6 @@ Tanggal,Ticker,Katalis
 2026-06-18,KKGI.JK,Dividen
 2026-06-17,DMAS.JK,Dividen
 2026-06-17,CLPI.JK,Dividen
-2026-06-17,INTP.JK,"Penjualan, Volume"
 2026-06-15,EMAS.JK,Kontrak
 2026-06-15,BYAN.JK,Dividen
 2026-06-15,TINS.JK,Dividen
@@ -80,7 +87,6 @@ Tanggal,Ticker,Katalis
 2026-06-12,MDIY.JK,Dividen
 2026-06-11,ACES.JK,Dividen
 2026-06-11,PWON.JK,Dividen
-2026-06-11,FILM.JK,Penjualan
 2026-06-11,ISAT.JK,Penjualan
 2026-06-11,SMIL.JK,Penjualan
 2026-06-11,ARCI.JK,Penjualan
@@ -88,7 +94,6 @@ Tanggal,Ticker,Katalis
 2026-06-11,INDY.JK,Penjualan
 2026-06-11,MIKA.JK,Dividen
 2026-06-11,OMED.JK,Dividen
-2026-06-10,ANTM.JK,Dividen
 2026-06-10,TSPC.JK,Dividen
 2026-06-10,DSNG.JK,Dividen
 2026-06-10,MTDL.JK,Dividen
@@ -111,7 +116,6 @@ Tanggal,Ticker,Katalis
 2026-06-02,MAIN.JK,Dividen
 2026-06-02,GTSI.JK,Laba
 2026-06-01,AMMN.JK,Laba
-2026-05-29,BREN.JK,Indeks
 2026-05-29,TAPG.JK,Dividen
 2026-05-29,AADI.JK,Dividen
 2026-05-29,GJTL.JK,Dividen
@@ -123,7 +127,6 @@ Tanggal,Ticker,Katalis
 2026-05-26,NOBU.JK,Capex
 2026-05-26,MPMX.JK,Dividen
 2026-05-26,WIIM.JK,Dividen
-2026-05-26,KLBF.JK,Dividen
 2026-05-25,SOFA.JK,Proyek
 2026-05-25,DAAZ.JK,Indeks
 2026-05-25,HILL.JK,Indeks

@@ -1,4 +1,7 @@
 Tanggal,Ticker,Katalis
+2026-07-22,BREN.JK,Proyek
+2026-07-22,SINI.JK,Volume
+2026-07-22,TOBA.JK,Capex
 2026-07-21,CDIA.JK,Proyek
 2026-07-21,TPIA.JK,Proyek
 2026-07-21,OASA.JK,Proyek
@@ -12,7 +15,6 @@ Tanggal,Ticker,Katalis
 2026-07-17,BTPN.JK,"Akuisisi, Pendapatan"
 2026-07-17,AMRT.JK,Kinerja
 2026-07-17,JECX.JK,"Laba, Pendapatan"
-2026-07-15,BREN.JK,Akuisisi
 2026-07-15,INTP.JK,"Penjualan, Volume"
 2026-07-15,MLPT.JK,Stock split
 2026-07-15,PRDA.JK,"Laba, Pendapatan"
@@ -27,7 +29,6 @@ Tanggal,Ticker,Katalis
 2026-07-14,HRTA.JK,"Laba, Pendapatan"
 2026-07-14,SGER.JK,Proyek
 2026-07-14,BULL.JK,Proyek
-2026-07-14,TOBA.JK,Proyek
 2026-07-14,BUVA.JK,Proyek
 2026-07-14,BRPT.JK,Proyek
 2026-07-14,PGEO.JK,Proyek

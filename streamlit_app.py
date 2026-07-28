@@ -43,7 +43,7 @@ def muat_portofolio():
         "BBCA.JK": {"harga_beli": 6838.81, "stop_loss_pct": 5.0, "pengali_atr": 1.5, "tanggal_beli": "2026-04-21"},
 
         "GOTO.JK": {"harga_beli": 50.07, "stop_loss_pct": 1.8, "pengali_atr": 1.5, "tanggal_beli": "2026-05-20"},
-        "HEAL.JK": {"harga_beli": 996.49, "stop_loss_pct": 3.0, "pengali_atr": 1.5, "tanggal_beli": "2026-05-21"}
+        "HEAL.JK": {"harga_beli": 842.92, "stop_loss_pct": 3.0, "pengali_atr": 1.5, "tanggal_beli": "2026-07-28"}
     }
 
 def simpan_portofolio(data_porto):

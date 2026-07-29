@@ -1,6 +1,18 @@
 Tanggal,Ticker,Katalis
-2026-07-27,UNVR.JK,Kinerja
-2026-07-27,BBCA.JK,Kinerja
+2026-07-28,BBCA.JK,Laba
+2026-07-28,ISAT.JK,"Laba, Pendapatan"
+2026-07-28,UNVR.JK,Laba
+2026-07-28,ELSA.JK,"Indeks, Laba"
+2026-07-28,ESSA.JK,Laba
+2026-07-28,ERAL.JK,Laba
+2026-07-28,BBNI.JK,Buyback
+2026-07-28,DSNG.JK,Indeks
+2026-07-28,EXCL.JK,Indeks
+2026-07-28,RAJA.JK,Indeks
+2026-07-28,ENRG.JK,Indeks
+2026-07-28,BRMS.JK,Indeks
+2026-07-28,FILM.JK,Indeks
+2026-07-28,BUKA.JK,Indeks
 2026-07-27,MIDI.JK,Laba
 2026-07-27,BTPS.JK,Laba
 2026-07-27,AUTO.JK,Laba
@@ -31,12 +43,7 @@ Tanggal,Ticker,Katalis
 2026-07-15,MLPT.JK,Stock split
 2026-07-15,PRDA.JK,"Laba, Pendapatan"
 2026-07-15,ARTO.JK,Indeks
-2026-07-15,BUKA.JK,Indeks
-2026-07-15,ESSA.JK,Indeks
 2026-07-15,ANTM.JK,Indeks
-2026-07-15,FILM.JK,Indeks
-2026-07-15,ENRG.JK,Indeks
-2026-07-15,BRMS.JK,Indeks
 2026-07-15,KLBF.JK,Indeks
 2026-07-14,HRTA.JK,"Laba, Pendapatan"
 2026-07-14,SGER.JK,Proyek
@@ -50,7 +57,6 @@ Tanggal,Ticker,Katalis
 2026-07-09,NRCA.JK,Kontrak
 2026-07-09,PRDL.JK,"Laba, Pendapatan"
 2026-07-09,DEWA.JK,Penjualan
-2026-07-09,RAJA.JK,Penjualan
 2026-07-09,TCPI.JK,Penjualan
 2026-07-09,IMPC.JK,Penjualan
 2026-07-09,CTRA.JK,Penjualan
@@ -61,7 +67,6 @@ Tanggal,Ticker,Katalis
 2026-07-08,NISP.JK,Capex
 2026-07-08,BACH.JK,"Laba, Pendapatan"
 2026-07-08,EMMI.JK,"Laba, Pendapatan"
-2026-07-07,BBNI.JK,Buyback
 2026-07-06,PGAS.JK,Proyek
 2026-07-06,GOTO.JK,Laba
 2026-07-02,DSSA.JK,Akuisisi
@@ -86,7 +91,6 @@ Tanggal,Ticker,Katalis
 2026-06-25,GGRM.JK,Dividen
 2026-06-25,DVLA.JK,Dividen
 2026-06-25,SMDR.JK,Dividen
-2026-06-23,ERAL.JK,Capex
 2026-06-23,CFIN.JK,Dividen
 2026-06-19,BSSR.JK,Dividen
 2026-06-19,BIRD.JK,Dividen
@@ -104,7 +108,6 @@ Tanggal,Ticker,Katalis
 2026-06-12,MDIY.JK,Dividen
 2026-06-11,ACES.JK,Dividen
 2026-06-11,PWON.JK,Dividen
-2026-06-11,ISAT.JK,Penjualan
 2026-06-11,SMIL.JK,Penjualan
 2026-06-11,ARCI.JK,Penjualan
 2026-06-11,CUAN.JK,Penjualan
@@ -112,10 +115,8 @@ Tanggal,Ticker,Katalis
 2026-06-11,MIKA.JK,Dividen
 2026-06-11,OMED.JK,Dividen
 2026-06-10,TSPC.JK,Dividen
-2026-06-10,DSNG.JK,Dividen
 2026-06-10,MTDL.JK,Dividen
 2026-06-10,PGUN.JK,Laba
-2026-06-09,ELSA.JK,Dividen
 2026-06-09,GHON.JK,Dividen
 2026-06-08,TLKM.JK,Dividen
 2026-06-08,TOTO.JK,Dividen

@@ -1,4 +1,15 @@
 Tanggal,Ticker,Katalis
+2026-07-30,ASII.JK,Laba
+2026-07-30,UNTR.JK,"Kinerja, Laba"
+2026-07-30,BUMI.JK,"Kontrak, Proyek"
+2026-07-30,INCO.JK,Laba
+2026-07-30,TAPG.JK,Laba
+2026-07-30,MAPA.JK,Laba
+2026-07-30,ERAA.JK,Laba
+2026-07-30,TPIA.JK,Laba
+2026-07-30,SMSM.JK,Dividen
+2026-07-30,ARGO.JK,Capex
+2026-07-30,ELIT.JK,Proyek
 2026-07-29,TINS.JK,Laba
 2026-07-29,MYOR.JK,Laba
 2026-07-29,WIIM.JK,Laba
@@ -37,7 +48,6 @@ Tanggal,Ticker,Katalis
 2026-07-22,BREN.JK,Proyek
 2026-07-22,TOBA.JK,Capex
 2026-07-21,CDIA.JK,Proyek
-2026-07-21,TPIA.JK,Proyek
 2026-07-21,OASA.JK,Proyek
 2026-07-20,DCII.JK,Ekspansi
 2026-07-20,RISE.JK,Proyek
@@ -58,7 +68,6 @@ Tanggal,Ticker,Katalis
 2026-07-14,PGEO.JK,Proyek
 2026-07-13,RMKE.JK,Stock split
 2026-07-13,DOID.JK,Pendapatan
-2026-07-10,ASII.JK,Penjualan
 2026-07-09,NRCA.JK,Kontrak
 2026-07-09,PRDL.JK,"Laba, Pendapatan"
 2026-07-09,DEWA.JK,Penjualan
@@ -74,11 +83,9 @@ Tanggal,Ticker,Katalis
 2026-07-08,EMMI.JK,"Laba, Pendapatan"
 2026-07-06,PGAS.JK,Proyek
 2026-07-02,DSSA.JK,Akuisisi
-2026-07-01,UNTR.JK,Buyback
 2026-07-01,PBSA.JK,Dividen
 2026-07-01,MTEL.JK,Dividen
 2026-07-01,BBHI.JK,Buyback
-2026-06-30,ERAA.JK,Dividen
 2026-06-30,DLTA.JK,Dividen
 2026-06-29,IPCM.JK,"Dividen, Rups"
 2026-06-29,TBLA.JK,Dividen
@@ -91,7 +98,6 @@ Tanggal,Ticker,Katalis
 2026-06-25,BBRI.JK,Laba
 2026-06-25,BRIS.JK,Laba
 2026-06-25,MAPI.JK,"Laba, Pendapatan"
-2026-06-25,MAPA.JK,"Laba, Pendapatan"
 2026-06-25,GGRM.JK,Dividen
 2026-06-25,DVLA.JK,Dividen
 2026-06-25,SMDR.JK,Dividen
@@ -133,7 +139,6 @@ Tanggal,Ticker,Katalis
 2026-06-02,MAIN.JK,Dividen
 2026-06-02,GTSI.JK,Laba
 2026-06-01,AMMN.JK,Laba
-2026-05-29,TAPG.JK,Dividen
 2026-05-29,AADI.JK,Dividen
 2026-05-29,GJTL.JK,Dividen
 2026-05-29,MAHA.JK,Dividen

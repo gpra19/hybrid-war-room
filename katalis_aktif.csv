@@ -1,4 +1,7 @@
 Tanggal,Ticker,Katalis
+2026-08-05,BBNI.JK,Laba
+2026-08-05,IKBI.JK,Dividen
+2026-08-05,MARK.JK,Dividen
 2026-08-04,MDKA.JK,"Kinerja, Penjualan, Volume"
 2026-08-04,MBMA.JK,"Kinerja, Penjualan, Volume"
 2026-08-04,EMAS.JK,"Kinerja, Penjualan, Volume"
@@ -49,7 +52,6 @@ Tanggal,Ticker,Katalis
 2026-07-28,UNVR.JK,Laba
 2026-07-28,ESSA.JK,Laba
 2026-07-28,ERAL.JK,Laba
-2026-07-28,BBNI.JK,Buyback
 2026-07-28,EXCL.JK,Indeks
 2026-07-28,RAJA.JK,Indeks
 2026-07-28,ENRG.JK,Indeks
@@ -176,4 +178,3 @@ Tanggal,Ticker,Katalis
 2026-05-19,IFSH.JK,"Akuisisi, Ekspansi"
 2026-05-13,BIPI.JK,Proyek
 2026-05-12,ITMG.JK,Laba
-2026-05-12,MARK.JK,"Dividen, Laba"

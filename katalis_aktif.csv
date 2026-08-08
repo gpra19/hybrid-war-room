@@ -1,4 +1,9 @@
 Tanggal,Ticker,Katalis
+2026-08-07,SIDO.JK,Pendapatan
+2026-08-07,PTBA.JK,Proyek
+2026-08-07,TOWR.JK,Laba
+2026-08-07,CNMA.JK,"Laba, Pendapatan"
+2026-08-07,ERAA.JK,Joint venture
 2026-08-06,OKAS.JK,"Kemitraan, Kontrak"
 2026-08-06,FORE.JK,"Laba, Pendapatan"
 2026-08-06,CMRY.JK,Laba
@@ -17,7 +22,6 @@ Tanggal,Ticker,Katalis
 2026-08-03,BUMI.JK,Laba
 2026-08-03,INDF.JK,Laba
 2026-08-03,ICBP.JK,"Kinerja, Laba"
-2026-08-03,SIDO.JK,Laba
 2026-08-03,ACES.JK,Laba
 2026-08-03,TAPG.JK,Dividen
 2026-08-03,POWR.JK,Laba
@@ -37,11 +41,9 @@ Tanggal,Ticker,Katalis
 2026-07-31,DSNG.JK,Laba
 2026-07-31,BIRD.JK,Laba
 2026-07-31,ASSA.JK,Laba
-2026-07-31,CNMA.JK,Laba
 2026-07-30,ASII.JK,Laba
 2026-07-30,UNTR.JK,"Kinerja, Laba"
 2026-07-30,MAPA.JK,Laba
-2026-07-30,ERAA.JK,Laba
 2026-07-30,TPIA.JK,Laba
 2026-07-30,SMSM.JK,Dividen
 2026-07-30,ARGO.JK,Capex
@@ -68,7 +70,6 @@ Tanggal,Ticker,Katalis
 2026-07-24,PTRO.JK,Kontrak
 2026-07-24,SINI.JK,Kontrak
 2026-07-24,BFIN.JK,Laba
-2026-07-24,PTBA.JK,"Penjualan, Volume"
 2026-07-24,DNET.JK,Capex
 2026-07-24,BTPN.JK,Capex
 2026-07-23,BMRI.JK,Laba
@@ -148,7 +149,6 @@ Tanggal,Ticker,Katalis
 2026-06-08,MEDC.JK,Dividen
 2026-06-05,PSAB.JK,Dividen
 2026-06-04,SPTO.JK,Dividen
-2026-06-03,TOWR.JK,Laba
 2026-06-03,BLOG.JK,Dividen
 2026-06-03,JTPE.JK,Dividen
 2026-06-02,MSTI.JK,Dividen

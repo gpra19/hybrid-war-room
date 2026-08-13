@@ -1,4 +1,6 @@
 Tanggal,Ticker,Katalis
+2026-08-12,EXCL.JK,Kinerja
+2026-08-12,OMED.JK,Pendapatan
 2026-08-11,AUTO.JK,Penjualan
 2026-08-11,DRMA.JK,Penjualan
 2026-08-11,MPMX.JK,Penjualan
@@ -67,7 +69,6 @@ Tanggal,Ticker,Katalis
 2026-07-28,ISAT.JK,"Laba, Pendapatan"
 2026-07-28,UNVR.JK,Laba
 2026-07-28,ERAL.JK,Laba
-2026-07-28,EXCL.JK,Indeks
 2026-07-28,RAJA.JK,Indeks
 2026-07-28,ENRG.JK,Indeks
 2026-07-28,FILM.JK,Indeks
@@ -147,7 +148,6 @@ Tanggal,Ticker,Katalis
 2026-06-11,ARCI.JK,Penjualan
 2026-06-11,INDY.JK,Penjualan
 2026-06-11,MIKA.JK,Dividen
-2026-06-11,OMED.JK,Dividen
 2026-06-10,TSPC.JK,Dividen
 2026-06-10,MTDL.JK,Dividen
 2026-06-10,PGUN.JK,Laba

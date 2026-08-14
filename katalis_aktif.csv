@@ -1,20 +1,25 @@
 Tanggal,Ticker,Katalis
-2026-08-12,EXCL.JK,Kinerja
+2026-08-13,BMRI.JK,Laba
+2026-08-13,EXCL.JK,Indeks
+2026-08-13,PNLF.JK,Indeks
+2026-08-13,GGRM.JK,Indeks
+2026-08-13,BBNI.JK,Indeks
+2026-08-13,MBMA.JK,Indeks
+2026-08-13,HEAL.JK,Indeks
+2026-08-13,ESSA.JK,Indeks
+2026-08-13,IMPC.JK,Indeks
 2026-08-12,OMED.JK,Pendapatan
 2026-08-11,AUTO.JK,Penjualan
 2026-08-11,DRMA.JK,Penjualan
 2026-08-11,MPMX.JK,Penjualan
 2026-08-11,ITMG.JK,Laba
-2026-08-11,BMRI.JK,Proyek
 2026-08-11,PTPP.JK,Kontrak
 2026-08-10,BUMI.JK,"Kinerja, Penjualan, Volume"
 2026-08-10,DEWA.JK,Laba
 2026-08-10,PSAB.JK,Indeks
-2026-08-10,ESSA.JK,Indeks
 2026-08-10,KIJA.JK,Indeks
 2026-08-10,HRUM.JK,Indeks
 2026-08-10,TPIA.JK,Indeks
-2026-08-10,GGRM.JK,Indeks
 2026-08-10,DSNG.JK,Indeks
 2026-08-10,CUAN.JK,Indeks
 2026-08-09,CNMA.JK,"Kinerja, Laba"
@@ -25,11 +30,9 @@ Tanggal,Ticker,Katalis
 2026-08-06,OKAS.JK,"Kemitraan, Kontrak"
 2026-08-06,FORE.JK,"Laba, Pendapatan"
 2026-08-06,CMRY.JK,Laba
-2026-08-05,BBNI.JK,Laba
 2026-08-05,IKBI.JK,Dividen
 2026-08-05,MARK.JK,Dividen
 2026-08-04,MDKA.JK,"Kinerja, Penjualan, Volume"
-2026-08-04,MBMA.JK,"Kinerja, Penjualan, Volume"
 2026-08-04,EMAS.JK,"Kinerja, Penjualan, Volume"
 2026-08-04,NCKL.JK,Laba
 2026-08-04,SRTG.JK,Buyback
@@ -108,7 +111,6 @@ Tanggal,Ticker,Katalis
 2026-07-09,NRCA.JK,Kontrak
 2026-07-09,PRDL.JK,"Laba, Pendapatan"
 2026-07-09,TCPI.JK,Penjualan
-2026-07-09,IMPC.JK,Penjualan
 2026-07-09,CTRA.JK,Penjualan
 2026-07-08,SAME.JK,Capex
 2026-07-08,RSGK.JK,Capex

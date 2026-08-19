@@ -1,11 +1,15 @@
 Tanggal,Ticker,Katalis
+2026-08-18,BBCA.JK,"Akuisisi, Laba"
+2026-08-18,ENRG.JK,Laba
+2026-08-18,TINS.JK,Laba
+2026-08-18,BBNI.JK,Akuisisi
+2026-08-18,BNGA.JK,Akuisisi
+2026-08-18,DOOH.JK,Akuisisi
 2026-08-14,INCO.JK,Proyek
-2026-08-14,ENRG.JK,Ekspansi
 2026-08-13,BMRI.JK,Laba
 2026-08-13,EXCL.JK,Indeks
 2026-08-13,PNLF.JK,Indeks
 2026-08-13,GGRM.JK,Indeks
-2026-08-13,BBNI.JK,Indeks
 2026-08-13,MBMA.JK,Indeks
 2026-08-13,HEAL.JK,Indeks
 2026-08-13,ESSA.JK,Indeks
@@ -54,7 +58,6 @@ Tanggal,Ticker,Katalis
 2026-07-31,MAPI.JK,Laba
 2026-07-31,BBYB.JK,Laba
 2026-07-31,BUVA.JK,Laba
-2026-07-31,TINS.JK,Laba
 2026-07-31,COIN.JK,Laba
 2026-07-31,MYOR.JK,Laba
 2026-07-31,ADRO.JK,Laba
@@ -69,7 +72,6 @@ Tanggal,Ticker,Katalis
 2026-07-29,WIIM.JK,Laba
 2026-07-29,MGLV.JK,"Akuisisi, Penjualan"
 2026-07-29,GOTO.JK,Buyback
-2026-07-28,BBCA.JK,Laba
 2026-07-28,ISAT.JK,"Laba, Pendapatan"
 2026-07-28,UNVR.JK,Laba
 2026-07-28,ERAL.JK,Laba
@@ -114,7 +116,6 @@ Tanggal,Ticker,Katalis
 2026-07-09,CTRA.JK,Penjualan
 2026-07-08,SAME.JK,Capex
 2026-07-08,RSGK.JK,Capex
-2026-07-08,BNGA.JK,Capex
 2026-07-08,NISP.JK,Capex
 2026-07-08,BACH.JK,"Laba, Pendapatan"
 2026-07-08,EMMI.JK,"Laba, Pendapatan"

@@ -1,4 +1,9 @@
 Tanggal,Ticker,Katalis
+2026-08-19,PIPA.JK,Akuisisi
+2026-08-19,BYAN.JK,Akuisisi
+2026-08-19,APEX.JK,Kontrak
+2026-08-19,INTP.JK,"Penjualan, Volume"
+2026-08-19,PRDA.JK,Buyback
 2026-08-18,BBCA.JK,"Akuisisi, Laba"
 2026-08-18,ENRG.JK,Laba
 2026-08-18,TINS.JK,Laba
@@ -99,9 +104,7 @@ Tanggal,Ticker,Katalis
 2026-07-17,BBTN.JK,Laba
 2026-07-17,AMRT.JK,Kinerja
 2026-07-17,JECX.JK,"Laba, Pendapatan"
-2026-07-15,INTP.JK,"Penjualan, Volume"
 2026-07-15,MLPT.JK,Stock split
-2026-07-15,PRDA.JK,"Laba, Pendapatan"
 2026-07-15,ARTO.JK,Indeks
 2026-07-14,HRTA.JK,"Laba, Pendapatan"
 2026-07-14,SGER.JK,Proyek
@@ -140,7 +143,6 @@ Tanggal,Ticker,Katalis
 2026-06-18,PNBN.JK,Dividen
 2026-06-18,KKGI.JK,Dividen
 2026-06-17,CLPI.JK,Dividen
-2026-06-15,BYAN.JK,Dividen
 2026-06-15,JELI.JK,Dividen
 2026-06-15,YUPI.JK,Dividen
 2026-06-12,MLBI.JK,Dividen

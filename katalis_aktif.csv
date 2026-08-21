@@ -1,10 +1,13 @@
 Tanggal,Ticker,Katalis
+2026-08-20,JARR.JK,Akuisisi
+2026-08-20,BYAN.JK,Akuisisi
+2026-08-20,BBCA.JK,Dividen
+2026-08-20,JPFA.JK,Laba
+2026-08-20,CBDK.JK,Buyback
 2026-08-19,PIPA.JK,Akuisisi
-2026-08-19,BYAN.JK,Akuisisi
 2026-08-19,APEX.JK,Kontrak
 2026-08-19,INTP.JK,"Penjualan, Volume"
 2026-08-19,PRDA.JK,Buyback
-2026-08-18,BBCA.JK,"Akuisisi, Laba"
 2026-08-18,ENRG.JK,Laba
 2026-08-18,TINS.JK,Laba
 2026-08-18,BBNI.JK,Akuisisi
@@ -184,7 +187,6 @@ Tanggal,Ticker,Katalis
 2026-05-21,SSIA.JK,Pendapatan
 2026-05-21,JSMR.JK,Dividen
 2026-05-21,GEMS.JK,Dividen
-2026-05-20,CBDK.JK,Buyback
 2026-05-20,TPMA.JK,Dividen
 2026-05-19,IFSH.JK,"Akuisisi, Ekspansi"
 2026-05-13,BIPI.JK,Proyek

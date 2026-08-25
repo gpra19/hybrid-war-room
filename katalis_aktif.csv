@@ -1,4 +1,9 @@
 Tanggal,Ticker,Katalis
+2026-08-24,BBNI.JK,Laba
+2026-08-24,MTEL.JK,Merger
+2026-08-24,TBIG.JK,Merger
+2026-08-24,PGEO.JK,"Joint venture, Penjualan"
+2026-08-24,AVIA.JK,Penjualan
 2026-08-21,BUMI.JK,Akuisisi
 2026-08-21,BWPT.JK,Penjualan
 2026-08-21,SMGR.JK,"Penjualan, Volume"
@@ -14,7 +19,6 @@ Tanggal,Ticker,Katalis
 2026-08-19,PRDA.JK,Buyback
 2026-08-18,ENRG.JK,Laba
 2026-08-18,TINS.JK,Laba
-2026-08-18,BBNI.JK,Akuisisi
 2026-08-18,BNGA.JK,Akuisisi
 2026-08-18,DOOH.JK,Akuisisi
 2026-08-14,INCO.JK,Proyek
@@ -115,7 +119,6 @@ Tanggal,Ticker,Katalis
 2026-07-14,SGER.JK,Proyek
 2026-07-14,BULL.JK,Proyek
 2026-07-14,BRPT.JK,Proyek
-2026-07-14,PGEO.JK,Proyek
 2026-07-13,RMKE.JK,Stock split
 2026-07-13,DOID.JK,Pendapatan
 2026-07-09,NRCA.JK,Kontrak
@@ -130,7 +133,6 @@ Tanggal,Ticker,Katalis
 2026-07-06,PGAS.JK,Proyek
 2026-07-02,DSSA.JK,Akuisisi
 2026-07-01,PBSA.JK,Dividen
-2026-07-01,MTEL.JK,Dividen
 2026-07-01,BBHI.JK,Buyback
 2026-06-30,DLTA.JK,Dividen
 2026-06-29,IPCM.JK,"Dividen, Rups"
@@ -150,7 +152,6 @@ Tanggal,Ticker,Katalis
 2026-06-17,CLPI.JK,Dividen
 2026-06-15,JELI.JK,Dividen
 2026-06-12,MLBI.JK,Dividen
-2026-06-12,TBIG.JK,Dividen
 2026-06-12,MDIY.JK,Dividen
 2026-06-11,PWON.JK,Dividen
 2026-06-11,SMIL.JK,Penjualan

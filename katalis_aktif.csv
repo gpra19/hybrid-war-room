@@ -1,11 +1,14 @@
 Tanggal,Ticker,Katalis
+2026-08-27,ARKO.JK,Proyek
+2026-08-27,CMRY.JK,Dividen
+2026-08-27,TLKM.JK,Ekspansi
+2026-08-27,BWPT.JK,"Dividen, Kinerja"
 2026-08-24,BBNI.JK,Laba
 2026-08-24,MTEL.JK,Merger
 2026-08-24,TBIG.JK,Merger
 2026-08-24,PGEO.JK,"Joint venture, Penjualan"
 2026-08-24,AVIA.JK,Penjualan
 2026-08-21,BUMI.JK,Akuisisi
-2026-08-21,BWPT.JK,Penjualan
 2026-08-21,SMGR.JK,"Penjualan, Volume"
 2026-08-21,YUPI.JK,Dividen
 2026-08-20,JARR.JK,Akuisisi
@@ -50,7 +53,6 @@ Tanggal,Ticker,Katalis
 2026-08-07,ERAA.JK,Joint venture
 2026-08-06,OKAS.JK,"Kemitraan, Kontrak"
 2026-08-06,FORE.JK,"Laba, Pendapatan"
-2026-08-06,CMRY.JK,Laba
 2026-08-05,IKBI.JK,Dividen
 2026-08-05,MARK.JK,Dividen
 2026-08-04,MDKA.JK,"Kinerja, Penjualan, Volume"
@@ -58,7 +60,6 @@ Tanggal,Ticker,Katalis
 2026-08-04,NCKL.JK,Laba
 2026-08-04,SRTG.JK,Buyback
 2026-08-04,WIKA.JK,Kontrak
-2026-08-03,TLKM.JK,Kinerja
 2026-08-03,BRMS.JK,"Kinerja, Laba"
 2026-08-03,ANTM.JK,"Kontrak, Penjualan, Volume"
 2026-08-03,INDF.JK,Laba

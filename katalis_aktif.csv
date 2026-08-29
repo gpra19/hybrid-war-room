@@ -1,4 +1,6 @@
 Tanggal,Ticker,Katalis
+2026-08-28,EMAS.JK,Kinerja
+2026-08-28,ARCI.JK,Laba
 2026-08-27,ARKO.JK,Proyek
 2026-08-27,CMRY.JK,Dividen
 2026-08-27,TLKM.JK,Ekspansi
@@ -56,7 +58,6 @@ Tanggal,Ticker,Katalis
 2026-08-05,IKBI.JK,Dividen
 2026-08-05,MARK.JK,Dividen
 2026-08-04,MDKA.JK,"Kinerja, Penjualan, Volume"
-2026-08-04,EMAS.JK,"Kinerja, Penjualan, Volume"
 2026-08-04,NCKL.JK,Laba
 2026-08-04,SRTG.JK,Buyback
 2026-08-04,WIKA.JK,Kontrak
@@ -156,7 +157,6 @@ Tanggal,Ticker,Katalis
 2026-06-12,MDIY.JK,Dividen
 2026-06-11,PWON.JK,Dividen
 2026-06-11,SMIL.JK,Penjualan
-2026-06-11,ARCI.JK,Penjualan
 2026-06-11,INDY.JK,Penjualan
 2026-06-11,MIKA.JK,Dividen
 2026-06-10,TSPC.JK,Dividen

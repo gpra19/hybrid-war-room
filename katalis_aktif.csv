@@ -1,4 +1,14 @@
 Tanggal,Ticker,Katalis
+2026-09-07,BUMI.JK,"Akuisisi, Subsidi"
+2026-09-07,BTPS.JK,Buyback
+2026-09-07,PSAB.JK,Dividen
+2026-09-07,SGER.JK,Subsidi
+2026-09-07,BFIN.JK,Subsidi
+2026-09-07,AKRA.JK,Subsidi
+2026-09-07,BUVA.JK,Subsidi
+2026-09-07,EMAS.JK,Subsidi
+2026-09-07,ARTO.JK,Subsidi
+2026-09-07,ESSA.JK,Subsidi
 2026-09-04,DCII.JK,Ekspansi
 2026-09-04,CUAN.JK,Akuisisi
 2026-09-04,SINI.JK,Akuisisi
@@ -18,7 +28,6 @@ Tanggal,Ticker,Katalis
 2026-08-31,AADI.JK,"Dividen, Laba, Pendapatan"
 2026-08-31,ADMR.JK,Laba
 2026-08-31,UNTR.JK,"Kinerja, Penjualan, Volume"
-2026-08-28,EMAS.JK,Kinerja
 2026-08-28,ARCI.JK,Laba
 2026-08-27,ARKO.JK,Proyek
 2026-08-27,CMRY.JK,Dividen
@@ -29,7 +38,6 @@ Tanggal,Ticker,Katalis
 2026-08-24,TBIG.JK,Merger
 2026-08-24,PGEO.JK,"Joint venture, Penjualan"
 2026-08-24,AVIA.JK,Penjualan
-2026-08-21,BUMI.JK,Akuisisi
 2026-08-21,SMGR.JK,"Penjualan, Volume"
 2026-08-21,YUPI.JK,Dividen
 2026-08-20,JARR.JK,Akuisisi
@@ -51,14 +59,12 @@ Tanggal,Ticker,Katalis
 2026-08-13,GGRM.JK,Indeks
 2026-08-13,MBMA.JK,Indeks
 2026-08-13,HEAL.JK,Indeks
-2026-08-13,ESSA.JK,Indeks
 2026-08-13,IMPC.JK,Indeks
 2026-08-12,OMED.JK,Pendapatan
 2026-08-11,AUTO.JK,Penjualan
 2026-08-11,DRMA.JK,Penjualan
 2026-08-11,MPMX.JK,Penjualan
 2026-08-10,DEWA.JK,Laba
-2026-08-10,PSAB.JK,Indeks
 2026-08-10,KIJA.JK,Indeks
 2026-08-10,HRUM.JK,Indeks
 2026-08-10,TPIA.JK,Indeks
@@ -87,7 +93,6 @@ Tanggal,Ticker,Katalis
 2026-07-31,ULTJ.JK,Laba
 2026-07-31,MAPI.JK,Laba
 2026-07-31,BBYB.JK,Laba
-2026-07-31,BUVA.JK,Laba
 2026-07-31,COIN.JK,Laba
 2026-07-31,MYOR.JK,Laba
 2026-07-31,BIRD.JK,Laba
@@ -107,14 +112,11 @@ Tanggal,Ticker,Katalis
 2026-07-28,FILM.JK,Indeks
 2026-07-28,BUKA.JK,Indeks
 2026-07-27,MIDI.JK,Laba
-2026-07-27,BTPS.JK,Laba
 2026-07-27,DMAS.JK,Penjualan
 2026-07-27,SUNI.JK,Kontrak
 2026-07-24,PTRO.JK,Kontrak
-2026-07-24,BFIN.JK,Laba
 2026-07-24,DNET.JK,Capex
 2026-07-24,BTPN.JK,Capex
-2026-07-23,AKRA.JK,"Dividen, Laba"
 2026-07-23,HMSP.JK,"Penjualan, Volume"
 2026-07-23,EPAC.JK,Akuisisi
 2026-07-22,TOBA.JK,Capex
@@ -125,9 +127,7 @@ Tanggal,Ticker,Katalis
 2026-07-17,AMRT.JK,Kinerja
 2026-07-17,JECX.JK,"Laba, Pendapatan"
 2026-07-15,MLPT.JK,Stock split
-2026-07-15,ARTO.JK,Indeks
 2026-07-14,HRTA.JK,"Laba, Pendapatan"
-2026-07-14,SGER.JK,Proyek
 2026-07-14,BULL.JK,Proyek
 2026-07-14,BRPT.JK,Proyek
 2026-07-13,RMKE.JK,Stock split

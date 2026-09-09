@@ -1,4 +1,6 @@
 Tanggal,Ticker,Katalis
+2026-09-08,POWR.JK,Laba
+2026-09-08,PGAS.JK,"Penjualan, Volume"
 2026-09-07,BUMI.JK,"Akuisisi, Subsidi"
 2026-09-07,BTPS.JK,Buyback
 2026-09-07,PSAB.JK,Dividen
@@ -86,7 +88,6 @@ Tanggal,Ticker,Katalis
 2026-08-03,ICBP.JK,"Kinerja, Laba"
 2026-08-03,ACES.JK,Laba
 2026-08-03,TAPG.JK,Dividen
-2026-08-03,POWR.JK,Laba
 2026-07-31,ELSA.JK,Kinerja
 2026-07-31,BREN.JK,Laba
 2026-07-31,KLBF.JK,Laba
@@ -141,7 +142,6 @@ Tanggal,Ticker,Katalis
 2026-07-08,NISP.JK,Capex
 2026-07-08,BACH.JK,"Laba, Pendapatan"
 2026-07-08,EMMI.JK,"Laba, Pendapatan"
-2026-07-06,PGAS.JK,Proyek
 2026-07-01,PBSA.JK,Dividen
 2026-06-30,DLTA.JK,Dividen
 2026-06-29,IPCM.JK,"Dividen, Rups"

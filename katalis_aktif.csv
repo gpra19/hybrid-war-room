@@ -1,7 +1,19 @@
 Tanggal,Ticker,Katalis
+2026-09-21,AMMN.JK,Laba
+2026-09-21,HEXA.JK,Dividen
+2026-09-21,SCNP.JK,Penjualan
+2026-09-21,BIKE.JK,Proyek
+2026-09-21,COIN.JK,Indeks
+2026-09-21,BIPI.JK,Indeks
+2026-09-21,BULL.JK,Indeks
+2026-09-21,TINS.JK,Indeks
+2026-09-21,KPIG.JK,Indeks
+2026-09-21,BRMS.JK,Indeks
+2026-09-21,WIRG.JK,Indeks
+2026-09-21,IMPC.JK,Indeks
+2026-09-21,ULTJ.JK,Laba
 2026-09-18,BYAN.JK,Akuisisi
 2026-09-18,KKGI.JK,Dividen
-2026-09-18,HEXA.JK,"Kinerja, Pendapatan"
 2026-09-18,MBTO.JK,Laba
 2026-09-18,IFII.JK,Dividen
 2026-09-17,MBMA.JK,Buyback
@@ -12,9 +24,6 @@ Tanggal,Ticker,Katalis
 2026-09-16,DRMA.JK,Joint venture
 2026-09-15,PSSI.JK,Penjualan
 2026-09-14,BMRI.JK,Laba
-2026-09-14,BRMS.JK,Indeks
-2026-09-14,WIRG.JK,Indeks
-2026-09-14,AMMN.JK,Indeks
 2026-09-14,BBRI.JK,Indeks
 2026-09-14,EMAS.JK,Indeks
 2026-09-14,MDKA.JK,Indeks
@@ -24,15 +33,11 @@ Tanggal,Ticker,Katalis
 2026-09-11,ASII.JK,Penjualan
 2026-09-11,INTP.JK,"Penjualan, Volume"
 2026-09-10,MAPI.JK,Dividen
-2026-09-10,KPIG.JK,Penjualan
 2026-09-10,SGER.JK,Penjualan
 2026-09-10,CUAN.JK,Penjualan
 2026-09-10,TAPG.JK,Penjualan
 2026-09-10,INDY.JK,Penjualan
-2026-09-10,COIN.JK,Penjualan
-2026-09-10,BIPI.JK,Penjualan
 2026-09-09,FOLK.JK,Proyek
-2026-09-09,IMPC.JK,Indeks
 2026-09-09,AADI.JK,Indeks
 2026-09-09,CMRY.JK,Indeks
 2026-09-09,MBSS.JK,Tender offer
@@ -77,7 +82,6 @@ Tanggal,Ticker,Katalis
 2026-08-19,APEX.JK,Kontrak
 2026-08-19,PRDA.JK,Buyback
 2026-08-18,ENRG.JK,Laba
-2026-08-18,TINS.JK,Laba
 2026-08-18,BNGA.JK,Akuisisi
 2026-08-18,DOOH.JK,Akuisisi
 2026-08-14,INCO.JK,Proyek
@@ -109,7 +113,6 @@ Tanggal,Ticker,Katalis
 2026-08-03,ACES.JK,Laba
 2026-07-31,ELSA.JK,Kinerja
 2026-07-31,BREN.JK,Laba
-2026-07-31,ULTJ.JK,Laba
 2026-07-31,BBYB.JK,Laba
 2026-07-31,MYOR.JK,Laba
 2026-07-31,BIRD.JK,Laba
@@ -143,7 +146,6 @@ Tanggal,Ticker,Katalis
 2026-07-17,JECX.JK,"Laba, Pendapatan"
 2026-07-15,MLPT.JK,Stock split
 2026-07-14,HRTA.JK,"Laba, Pendapatan"
-2026-07-14,BULL.JK,Proyek
 2026-07-14,BRPT.JK,Proyek
 2026-07-13,RMKE.JK,Stock split
 2026-07-13,DOID.JK,Pendapatan

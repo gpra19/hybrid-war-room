@@ -1,4 +1,8 @@
 Tanggal,Ticker,Katalis
+2026-09-23,POWR.JK,Ekspansi
+2026-09-23,DCII.JK,Ekspansi
+2026-09-23,AALI.JK,Capex
+2026-09-23,PBSA.JK,Stock split
 2026-09-22,ISAT.JK,"Kontrak, Laba, Pendapatan"
 2026-09-22,INET.JK,Akuisisi
 2026-09-22,UNTR.JK,"Kinerja, Penjualan, Volume"
@@ -47,7 +51,6 @@ Tanggal,Ticker,Katalis
 2026-09-09,AADI.JK,Indeks
 2026-09-09,CMRY.JK,Indeks
 2026-09-09,MBSS.JK,Tender offer
-2026-09-08,POWR.JK,Laba
 2026-09-08,PGAS.JK,"Penjualan, Volume"
 2026-09-07,BUMI.JK,"Akuisisi, Subsidi"
 2026-09-07,BTPS.JK,Buyback
@@ -56,7 +59,6 @@ Tanggal,Ticker,Katalis
 2026-09-07,AKRA.JK,Subsidi
 2026-09-07,BUVA.JK,Subsidi
 2026-09-07,ESSA.JK,Subsidi
-2026-09-04,DCII.JK,Ekspansi
 2026-09-04,SINI.JK,Akuisisi
 2026-09-04,ITMG.JK,"Penjualan, Volume"
 2026-09-03,LSIP.JK,Volume
@@ -162,7 +164,6 @@ Tanggal,Ticker,Katalis
 2026-07-08,NISP.JK,Capex
 2026-07-08,BACH.JK,"Laba, Pendapatan"
 2026-07-08,EMMI.JK,"Laba, Pendapatan"
-2026-07-01,PBSA.JK,Dividen
 2026-06-30,DLTA.JK,Dividen
 2026-06-29,IPCM.JK,"Dividen, Rups"
 2026-06-29,TBLA.JK,Dividen

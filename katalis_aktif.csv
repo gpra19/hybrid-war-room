@@ -1,4 +1,7 @@
 Tanggal,Ticker,Katalis
+2026-10-07,BYAN.JK,Penjualan
+2026-10-07,REAL.JK,Akuisisi
+2026-10-07,PTPP.JK,Kontrak
 2026-10-05,TLKM.JK,Buyback
 2026-10-05,ASII.JK,Dividen
 2026-10-05,KIJA.JK,Akuisisi
@@ -21,7 +24,6 @@ Tanggal,Ticker,Katalis
 2026-09-29,SEMA.JK,"Kontrak, Proyek"
 2026-09-29,ISAT.JK,Joint venture
 2026-09-28,BBRI.JK,Laba
-2026-09-28,BYAN.JK,Penjualan
 2026-09-28,HRUM.JK,Buyback
 2026-09-25,SILO.JK,Akuisisi
 2026-09-25,MERK.JK,Laba
@@ -85,7 +87,6 @@ Tanggal,Ticker,Katalis
 2026-09-03,DKFT.JK,Dividen
 2026-09-03,BBHI.JK,Buyback
 2026-09-01,DSSA.JK,Ekspansi
-2026-09-01,PTPP.JK,Kontrak
 2026-09-01,ADHI.JK,Proyek
 2026-09-01,ADCP.JK,Proyek
 2026-08-31,ADMR.JK,Laba

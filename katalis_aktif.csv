@@ -1,11 +1,20 @@
 Tanggal,Ticker,Katalis
+2026-10-09,BYAN.JK,Penjualan
+2026-10-09,PBSA.JK,Stock split
+2026-10-09,BUAH.JK,Dividen
+2026-10-09,INDY.JK,Proyek
+2026-10-09,ARCI.JK,Proyek
+2026-10-09,GGRM.JK,Proyek
+2026-10-09,PSAB.JK,Proyek
+2026-10-09,KIJA.JK,Proyek
+2026-10-09,TINS.JK,Proyek
+2026-10-09,PGAS.JK,Proyek
+2026-10-09,BFIN.JK,Proyek
 2026-10-08,PLIN.JK,Dividen
-2026-10-07,BYAN.JK,Penjualan
 2026-10-07,REAL.JK,Akuisisi
 2026-10-07,PTPP.JK,Kontrak
 2026-10-05,TLKM.JK,Buyback
 2026-10-05,ASII.JK,Dividen
-2026-10-05,KIJA.JK,Akuisisi
 2026-10-02,AALI.JK,Buyback
 2026-10-02,BACH.JK,Capex
 2026-10-02,BNII.JK,Capex
@@ -17,7 +26,6 @@ Tanggal,Ticker,Katalis
 2026-10-02,WIFI.JK,Dividen
 2026-10-02,KPIG.JK,Dividen
 2026-10-02,PANI.JK,Dividen
-2026-10-02,PGAS.JK,Kontrak
 2026-10-01,UNTR.JK,Buyback
 2026-10-01,ASGR.JK,Dividen
 2026-10-01,GEMS.JK,Dividen
@@ -31,7 +39,6 @@ Tanggal,Ticker,Katalis
 2026-09-25,NICL.JK,Dividen
 2026-09-23,POWR.JK,Ekspansi
 2026-09-23,DCII.JK,Ekspansi
-2026-09-23,PBSA.JK,Stock split
 2026-09-22,INET.JK,Akuisisi
 2026-09-22,MEDC.JK,Laba
 2026-09-22,AMMN.JK,Laba
@@ -44,7 +51,6 @@ Tanggal,Ticker,Katalis
 2026-09-21,COIN.JK,Indeks
 2026-09-21,BIPI.JK,Indeks
 2026-09-21,BULL.JK,Indeks
-2026-09-21,TINS.JK,Indeks
 2026-09-21,BRMS.JK,Indeks
 2026-09-21,WIRG.JK,Indeks
 2026-09-21,IMPC.JK,Indeks
@@ -69,15 +75,12 @@ Tanggal,Ticker,Katalis
 2026-09-10,SGER.JK,Penjualan
 2026-09-10,CUAN.JK,Penjualan
 2026-09-10,TAPG.JK,Penjualan
-2026-09-10,INDY.JK,Penjualan
 2026-09-09,FOLK.JK,Proyek
 2026-09-09,AADI.JK,Indeks
 2026-09-09,CMRY.JK,Indeks
 2026-09-09,MBSS.JK,Tender offer
 2026-09-07,BUMI.JK,"Akuisisi, Subsidi"
 2026-09-07,BTPS.JK,Buyback
-2026-09-07,PSAB.JK,Dividen
-2026-09-07,BFIN.JK,Subsidi
 2026-09-07,AKRA.JK,Subsidi
 2026-09-07,BUVA.JK,Subsidi
 2026-09-07,ESSA.JK,Subsidi
@@ -91,7 +94,6 @@ Tanggal,Ticker,Katalis
 2026-09-01,ADHI.JK,Proyek
 2026-09-01,ADCP.JK,Proyek
 2026-08-31,ADMR.JK,Laba
-2026-08-28,ARCI.JK,Laba
 2026-08-27,ARKO.JK,Proyek
 2026-08-27,BWPT.JK,"Dividen, Kinerja"
 2026-08-24,MTEL.JK,Merger
@@ -111,7 +113,6 @@ Tanggal,Ticker,Katalis
 2026-08-14,INCO.JK,Proyek
 2026-08-13,EXCL.JK,Indeks
 2026-08-13,PNLF.JK,Indeks
-2026-08-13,GGRM.JK,Indeks
 2026-08-13,HEAL.JK,Indeks
 2026-08-12,OMED.JK,Pendapatan
 2026-08-11,AUTO.JK,Penjualan

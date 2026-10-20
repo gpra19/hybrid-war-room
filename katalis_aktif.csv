@@ -1,4 +1,12 @@
 Tanggal,Ticker,Katalis
+2026-10-19,DMAS.JK,Penjualan
+2026-10-19,BBCA.JK,Buyback
+2026-10-19,BREN.JK,Buyback
+2026-10-19,CUAN.JK,Buyback
+2026-10-19,BRPT.JK,Buyback
+2026-10-19,TPIA.JK,Buyback
+2026-10-19,DSSA.JK,Buyback
+2026-10-19,ERAL.JK,Ekspansi
 2026-10-16,BMRI.JK,Capex
 2026-10-16,DEWA.JK,Laba
 2026-10-16,PGAS.JK,Subsidi
@@ -6,7 +14,6 @@ Tanggal,Ticker,Katalis
 2026-10-16,INET.JK,Subsidi
 2026-10-16,PANI.JK,Subsidi
 2026-10-16,PRDA.JK,Stock split
-2026-10-15,TPIA.JK,Kemitraan
 2026-10-14,PACK.JK,Akuisisi
 2026-10-14,INTP.JK,"Penjualan, Volume"
 2026-10-13,ISSP.JK,"Laba, Volume"
@@ -68,7 +75,6 @@ Tanggal,Ticker,Katalis
 2026-09-18,MBTO.JK,Laba
 2026-09-18,IFII.JK,Dividen
 2026-09-17,MBMA.JK,Buyback
-2026-09-16,BBCA.JK,Kinerja
 2026-09-16,BBNI.JK,Kinerja
 2026-09-16,KLBF.JK,Buyback
 2026-09-16,LPKR.JK,Buyback
@@ -80,7 +86,6 @@ Tanggal,Ticker,Katalis
 2026-09-11,RAJA.JK,Akuisisi
 2026-09-10,MAPI.JK,Dividen
 2026-09-10,SGER.JK,Penjualan
-2026-09-10,CUAN.JK,Penjualan
 2026-09-10,TAPG.JK,Penjualan
 2026-09-09,FOLK.JK,Proyek
 2026-09-09,AADI.JK,Indeks
@@ -97,7 +102,6 @@ Tanggal,Ticker,Katalis
 2026-09-03,ERAA.JK,Buyback
 2026-09-03,DKFT.JK,Dividen
 2026-09-03,BBHI.JK,Buyback
-2026-09-01,DSSA.JK,Ekspansi
 2026-09-01,ADHI.JK,Proyek
 2026-09-01,ADCP.JK,Proyek
 2026-08-31,ADMR.JK,Laba
@@ -138,7 +142,6 @@ Tanggal,Ticker,Katalis
 2026-08-03,ICBP.JK,"Kinerja, Laba"
 2026-08-03,ACES.JK,Laba
 2026-07-31,ELSA.JK,Kinerja
-2026-07-31,BREN.JK,Laba
 2026-07-31,BBYB.JK,Laba
 2026-07-31,MYOR.JK,Laba
 2026-07-31,BIRD.JK,Laba
@@ -150,11 +153,9 @@ Tanggal,Ticker,Katalis
 2026-07-29,WIIM.JK,Laba
 2026-07-29,MGLV.JK,"Akuisisi, Penjualan"
 2026-07-28,UNVR.JK,Laba
-2026-07-28,ERAL.JK,Laba
 2026-07-28,FILM.JK,Indeks
 2026-07-28,BUKA.JK,Indeks
 2026-07-27,MIDI.JK,Laba
-2026-07-27,DMAS.JK,Penjualan
 2026-07-27,SUNI.JK,Kontrak
 2026-07-24,PTRO.JK,Kontrak
 2026-07-24,DNET.JK,Capex
@@ -170,7 +171,6 @@ Tanggal,Ticker,Katalis
 2026-07-17,JECX.JK,"Laba, Pendapatan"
 2026-07-15,MLPT.JK,Stock split
 2026-07-14,HRTA.JK,"Laba, Pendapatan"
-2026-07-14,BRPT.JK,Proyek
 2026-07-13,RMKE.JK,Stock split
 2026-07-13,DOID.JK,Pendapatan
 2026-07-09,NRCA.JK,Kontrak

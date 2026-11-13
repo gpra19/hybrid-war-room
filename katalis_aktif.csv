@@ -1,4 +1,6 @@
 Tanggal,Ticker,Katalis
+2026-11-12,KEEN.JK,"Kontrak, Penjualan"
+2026-11-12,POWR.JK,Dividen
 2026-11-11,ITMG.JK,"Kinerja, Laba"
 2026-11-11,ASII.JK,Penjualan
 2026-11-11,ADES.JK,Stock split
@@ -43,7 +45,6 @@ Tanggal,Ticker,Katalis
 2026-11-02,BBCA.JK,Merger
 2026-11-02,BIKE.JK,Kontrak
 2026-11-02,MBMA.JK,"Kinerja, Penjualan, Volume"
-2026-10-30,POWR.JK,Laba
 2026-10-30,AMMN.JK,"Kinerja, Laba"
 2026-10-30,TINS.JK,Laba
 2026-10-30,PGAS.JK,Laba

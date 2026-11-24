@@ -1,4 +1,8 @@
 Tanggal,Ticker,Katalis
+2026-11-23,BUMI.JK,Proyek
+2026-11-23,CDIA.JK,Buyback
+2026-11-23,TRIM.JK,Buyback
+2026-11-23,SSIA.JK,Penjualan
 2026-11-20,EXCL.JK,Buyback
 2026-11-20,BFIN.JK,Dividen
 2026-11-20,BBCA.JK,Dividen
@@ -96,7 +100,6 @@ Tanggal,Ticker,Katalis
 2026-10-27,ERAL.JK,Laba
 2026-10-27,JSMR.JK,Indeks
 2026-10-27,DSNG.JK,Indeks
-2026-10-27,SSIA.JK,Indeks
 2026-10-27,BULL.JK,Indeks
 2026-10-27,TOBA.JK,Indeks
 2026-10-27,BRIS.JK,Buyback
@@ -162,7 +165,6 @@ Tanggal,Ticker,Katalis
 2026-09-14,ARTO.JK,Indeks
 2026-09-10,SGER.JK,Penjualan
 2026-09-09,FOLK.JK,Proyek
-2026-09-07,BUMI.JK,"Akuisisi, Subsidi"
 2026-09-07,BTPS.JK,Buyback
 2026-09-07,BUVA.JK,Subsidi
 2026-09-04,SINI.JK,Akuisisi
@@ -199,7 +201,6 @@ Tanggal,Ticker,Katalis
 2026-07-24,DNET.JK,Capex
 2026-07-24,BTPN.JK,Capex
 2026-07-23,EPAC.JK,Akuisisi
-2026-07-21,CDIA.JK,Proyek
 2026-07-21,OASA.JK,Proyek
 2026-07-20,RISE.JK,Proyek
 2026-07-17,AMRT.JK,Kinerja

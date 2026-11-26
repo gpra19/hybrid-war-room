@@ -1,4 +1,7 @@
 Tanggal,Ticker,Katalis
+2026-11-25,AADI.JK,Dividen
+2026-11-25,UNTR.JK,"Kinerja, Penjualan, Volume"
+2026-11-25,GPRA.JK,Buyback
 2026-11-24,ARCI.JK,Laba
 2026-11-24,ASGR.JK,Dividen
 2026-11-24,SMGR.JK,"Penjualan, Volume"
@@ -67,7 +70,6 @@ Tanggal,Ticker,Katalis
 2026-11-03,CPIN.JK,Laba
 2026-11-03,MEDC.JK,Dividen
 2026-11-03,BWPT.JK,Dividen
-2026-11-02,AADI.JK,Laba
 2026-11-02,TLKM.JK,Laba
 2026-11-02,GOTO.JK,Laba
 2026-11-02,INDF.JK,Laba
@@ -92,7 +94,6 @@ Tanggal,Ticker,Katalis
 2026-10-29,CNMA.JK,Laba
 2026-10-29,TPIA.JK,Buyback
 2026-10-29,PGEO.JK,Laba
-2026-10-28,UNTR.JK,"Dividen, Kinerja, Laba"
 2026-10-28,ISAT.JK,"Laba, Pendapatan"
 2026-10-28,MYOR.JK,Laba
 2026-10-28,PBID.JK,"Laba, Pendapatan"

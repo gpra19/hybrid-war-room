@@ -1,4 +1,13 @@
 Tanggal,Ticker,Katalis
+2026-11-27,RGAS.JK,Kontrak
+2026-11-27,BRMS.JK,Tarif
+2026-11-27,DEWA.JK,Tarif
+2026-11-27,TPIA.JK,Tarif
+2026-11-27,BRPT.JK,Tarif
+2026-11-27,TOBA.JK,Tarif
+2026-11-27,GOTO.JK,Tarif
+2026-11-27,MYOR.JK,Tarif
+2026-11-27,HEAL.JK,Tarif
 2026-11-26,TAPG.JK,Penjualan
 2026-11-26,DSNG.JK,Penjualan
 2026-11-26,LSIP.JK,Penjualan
@@ -17,7 +26,6 @@ Tanggal,Ticker,Katalis
 2026-11-20,EXCL.JK,Buyback
 2026-11-20,BFIN.JK,Dividen
 2026-11-20,BBCA.JK,Dividen
-2026-11-20,BRPT.JK,Ekspansi
 2026-11-20,ELSA.JK,Buyback
 2026-11-20,PKPK.JK,"Kontrak, Penjualan"
 2026-11-19,JTPE.JK,Dividen
@@ -32,7 +40,6 @@ Tanggal,Ticker,Katalis
 2026-11-16,ASII.JK,"Indeks, Laba, Pendapatan"
 2026-11-16,BBRI.JK,Indeks
 2026-11-16,AMMN.JK,Indeks
-2026-11-16,BRMS.JK,Indeks
 2026-11-16,MDKA.JK,Indeks
 2026-11-16,AALI.JK,Ekspansi
 2026-11-16,INTP.JK,"Penjualan, Volume"
@@ -41,7 +48,6 @@ Tanggal,Ticker,Katalis
 2026-11-16,BUKA.JK,Indeks
 2026-11-16,MIKA.JK,Indeks
 2026-11-16,RATU.JK,Indeks
-2026-11-16,DEWA.JK,Indeks
 2026-11-13,BMRI.JK,Laba
 2026-11-13,MSTI.JK,Dividen
 2026-11-13,VISI.JK,Akuisisi
@@ -75,7 +81,6 @@ Tanggal,Ticker,Katalis
 2026-11-03,MEDC.JK,Dividen
 2026-11-03,BWPT.JK,Dividen
 2026-11-02,TLKM.JK,Laba
-2026-11-02,GOTO.JK,Laba
 2026-11-02,INDF.JK,Laba
 2026-11-02,ICBP.JK,"Kinerja, Laba"
 2026-11-02,ADRO.JK,Laba
@@ -95,10 +100,8 @@ Tanggal,Ticker,Katalis
 2026-10-30,TBIG.JK,Buyback
 2026-10-29,PTBA.JK,Laba
 2026-10-29,CNMA.JK,Laba
-2026-10-29,TPIA.JK,Buyback
 2026-10-29,PGEO.JK,Laba
 2026-10-28,ISAT.JK,"Laba, Pendapatan"
-2026-10-28,MYOR.JK,Laba
 2026-10-28,PBID.JK,"Laba, Pendapatan"
 2026-10-28,DRMA.JK,Laba
 2026-10-27,MAPI.JK,Laba
@@ -106,7 +109,6 @@ Tanggal,Ticker,Katalis
 2026-10-27,ERAL.JK,Laba
 2026-10-27,JSMR.JK,Indeks
 2026-10-27,BULL.JK,Indeks
-2026-10-27,TOBA.JK,Indeks
 2026-10-27,BRIS.JK,Buyback
 2026-10-27,HMSP.JK,"Laba, Pendapatan"
 2026-10-27,OKAS.JK,Laba
@@ -183,7 +185,6 @@ Tanggal,Ticker,Katalis
 2026-08-18,BNGA.JK,Akuisisi
 2026-08-18,DOOH.JK,Akuisisi
 2026-08-13,PNLF.JK,Indeks
-2026-08-13,HEAL.JK,Indeks
 2026-08-12,OMED.JK,Pendapatan
 2026-08-06,FORE.JK,"Laba, Pendapatan"
 2026-08-05,IKBI.JK,Dividen
